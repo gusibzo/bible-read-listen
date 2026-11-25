@@ -1,820 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko"><head><script data-bard-client-injected="true">(function(firebaseConfig, initialAuthToken, appId) {
-        window.__firebase_config = firebaseConfig;
-        window.__initial_auth_token = initialAuthToken;
-        window.__app_id = appId;
-            })("\n{\n  \"apiKey\": \"AIzaSyCqyCcs2R2e7AegGjvFAwG98wlamtbHvZY\",\n  \"authDomain\": \"bard-frontend.firebaseapp.com\",\n  \"projectId\": \"bard-frontend\",\n  \"storageBucket\": \"bard-frontend.firebasestorage.app\",\n  \"messagingSenderId\": \"175205271074\",\n  \"appId\": \"1:175205271074:web:2b7bd4d34d33bf38e6ec7b\"\n}\n","eyJhbGciOiJSUzI1NiIsImtpZCI6IjExNjRiNzdiNDMzZDdhMDAyMWI4NjE4YjhjYTU3ZTMyZGI5MWUxMTMiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJmaXJlYmFzZS1hZG1pbnNkay1mYnN2Y0BiYXJkLWZyb250ZW5kLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwiYXVkIjoiaHR0cHM6Ly9pZGVudGl0eXRvb2xraXQuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLmlkZW50aXR5LmlkZW50aXR5dG9vbGtpdC52MS5JZGVudGl0eVRvb2xraXQiLCJ1aWQiOiIwODYwNjE0MjMyNzI2NTE4NzkyMyIsImlzcyI6ImZpcmViYXNlLWFkbWluc2RrLWZic3ZjQGJhcmQtZnJvbnRlbmQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGFpbXMiOnsiYXBwSWQiOiJjXzBjMTZkNjJjNTMzOThkOThfZTQ1MGRlOGRfaW5kZXguaHRtbC11bmRlZmluZWQifSwiZXhwIjoxNzk1NDUwNzQ5LCJpYXQiOjE3OTU0NDcxNDksImFsZyI6IlJTMjU2In0.Ac6TK_awfcVsPMV_yR6mYDzQDVK6IaRQXz6-gApsGIJ471_xYznUDyDhuGplmp2sXYER5-Xpk_0rA2qPTC_l8KVHUSXb9asmXk_1r4Hu0wMMz1VorOs3uUyihj_kq8pu1-Vw7iTc54XGz4G5LPcS-JmpagHlV7eVePk1_WMFKDdoenTSsYBuhDnZ84epzVbHowliZG4wSiqgGIuOB2hbtAxC9fwFijTgW0d1RmyOnMqMl7K9CT-jECFvNTnQk7S96LcxjMKDES0-7HRdEylUD2Piv80AVnAtm0JkTKVMGAUHqZWAKN-cBAGQHmGh4dK9lcw3WzkP6nRnfJfM1vgsYA","c_0c16d62c53398d98_e450de8d_index.html-undefined")</script><script data-bard-client-injected="true">
-  document.addEventListener('input', (event) => {
-    if (event.target && (event.target.isContentEditable || event.target.hasAttribute('contenteditable'))) {
-      const clonedDoc = document.cloneNode(true);
-      const injectedScripts = clonedDoc.querySelectorAll('[data-bard-client-injected="true"]');
-      injectedScripts.forEach(el => el.remove());
-      window.parent.postMessage({
-        type: 'inlineEdit',
-        html: '<!DOCTYPE html>\n' + clonedDoc.documentElement.outerHTML
-      }, '*');
-    }
-  });
-</script><script data-bard-client-injected="true">(function(){'use strict';window.addEventListener("message",a=>{a.data&&a.data.type==="SUPPLEMENTAL_DATA_UPDATE"&&window.dispatchEvent(new CustomEvent("supplementaldataupdate",{detail:a.data.data}))});}).call(this);
-</script><script data-bard-client-injected="true">(function() {
-  const SCROLL_KEYS = new Set([
-    'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
-    ' ', 'Spacebar', 'PageUp', 'PageDown', 'Home', 'End',
-  ]);
-  const HORIZONTAL_KEYS = new Set(['ArrowLeft', 'ArrowRight']);
-
-  function isTextEntryTarget(target) {
-    if (!target) return false;
-    const tagName = target.tagName;
-    return tagName === 'INPUT' || tagName === 'TEXTAREA' ||
-        tagName === 'SELECT' || target.isContentEditable === true;
-  }
-
-  // An element absorbs the key only if it both overflows on the axis being
-  // scrolled and is configured to scroll on that axis. The cheap dimension
-  // test runs first because getComputedStyle forces a style recalc, and this
-  // runs on every keypress. Each axis is read from its own longhand: the
-  // 'overflow' shorthand serializes as two values when the axes differ, which
-  // is the common 'overflow-x: hidden; overflow-y: auto' pane.
-  function canScroll(node, horizontal) {
-    const overflows = horizontal ? node.scrollWidth > node.clientWidth
-                                 : node.scrollHeight > node.clientHeight;
-    if (!overflows) return false;
-    const style = window.getComputedStyle(node);
-    const overflow = horizontal ? style.overflowX : style.overflowY;
-    return overflow === 'auto' || overflow === 'scroll';
-  }
-
-  // Walks up from the event target so nested scrollers keep their behavior.
-  // <body> is included because pages that pin the root height make it the
-  // scroll container.
-  function hasScrollableAncestor(target, horizontal) {
-    let node = target;
-    while (node && node !== document.documentElement) {
-      if (canScroll(node, horizontal)) return true;
-      node = node.parentElement;
-    }
-    return false;
-  }
-
-  function rootCanScroll(horizontal) {
-    const scroller = document.scrollingElement || document.documentElement;
-    if (!scroller) return false;
-    // Tolerate a pixel of rounding so subpixel layouts do not look scrollable.
-    return horizontal ? scroller.scrollWidth > window.innerWidth + 1
-                      : scroller.scrollHeight > window.innerHeight + 1;
-  }
-
-  window.addEventListener('keydown', function(event) {
-    if (!SCROLL_KEYS.has(event.key)) return;
-    if (event.defaultPrevented) return;
-    // Alt and Meta turn arrows into browser history navigation, and Ctrl is
-    // reserved for shortcuts, so none of them are scroll intent.
-    if (event.altKey || event.metaKey || event.ctrlKey) return;
-
-    const target = event.target;
-    if (isTextEntryTarget(target)) return;
-
-    // Anything that can still absorb the scroll gets to keep it.
-    const horizontal = HORIZONTAL_KEYS.has(event.key);
-    if (rootCanScroll(horizontal)) return;
-    if (hasScrollableAncestor(target, horizontal)) return;
-
-    event.preventDefault();
-  }, {capture: true, passive: false});
-})();</script><script data-bard-client-injected="true">(function() {
-  // Ensure this script is executed only once
-  if (window.firebaseAuthBridgeScriptLoaded) {
-    return;
-  }
-  window.firebaseAuthBridgeScriptLoaded = true;
-
-  let nextTokenPromiseId = 0;
-
-  // Stores { resolve, reject } for ongoing token requests
-  const pendingTokenPromises = {};
-
-  // Listen for messages from the Host Application
-  window.addEventListener('message', function(event) {
-
-    const messageData = event.data;
-
-  if (messageData && messageData.type === 'RESOLVE_NEW_FIREBASE_TOKEN') {
-      const { success, token, error, promiseId } = messageData ?? {};
-      if (pendingTokenPromises[promiseId]) {
-        if (success) {
-          pendingTokenPromises[promiseId].resolve(token);
-        } else {
-          pendingTokenPromises[promiseId].reject(new Error(error || 'Token refresh failed from host.'));
-        }
-        delete pendingTokenPromises[promiseId];
-      }
-    }
-  });
-
-  // Expose a function for the Generated App to request a new Firebase token
-  window.requestNewFirebaseToken = function() {
-    const currentPromiseId = nextTokenPromiseId++;
-    const promise = new Promise((resolve, reject) => {
-      pendingTokenPromises[currentPromiseId] = { resolve, reject };
-    });
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({
-        type: 'REQUEST_NEW_FIREBASE_TOKEN',
-        promiseId: currentPromiseId
-      }, '*');
-    } else {
-      pendingTokenPromises[currentPromiseId].reject(new Error('No parent window to request token from.'));
-      delete pendingTokenPromises[currentPromiseId];
-    }
-    return promise;
-  };
-})();</script><script data-bard-client-injected="true">
-let realOriginalGetUserMedia = null;
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-  realOriginalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
-}
-
-(function() {
-  if (navigator.mediaDevices && navigator.mediaDevices.__proto__) {
-    try {
-      Object.defineProperty(navigator.mediaDevices.__proto__, 'getUserMedia', {
-        get: function() {
-          return undefined; // Or throw an error
-        },
-        configurable: false
-      });
-    } catch (error) {
-      console.error("Error defining prototype getter:", error);
-    }
-  }
-})();
-
-(function() {
-  const pendingMediaResolvers = {};
-  let nextMediaPromiseId = 0;
-
-  function requestMediaPermissions(constraints) {
-    const mediaPromiseId = nextMediaPromiseId++;
-    const promise = new Promise((resolve, reject) => {
-      pendingMediaResolvers[mediaPromiseId] = (granted) => {
-        delete pendingMediaResolvers[mediaPromiseId];
-        resolve(granted);
-      };
-    });
-
-    window.parent.postMessage({
-      type: 'requestMediaPermission',
-      constraints: constraints,
-      promiseId: mediaPromiseId,
-    }, '*');
-
-    return promise;
-  }
-
-  let originalGetUserMedia = realOriginalGetUserMedia;
-
-  function interceptGetUserMedia() {
-    if (navigator.mediaDevices) {
-      Object.defineProperty(navigator.mediaDevices, 'getUserMedia', {
-        value: function(constraints) {
-          return requestMediaPermissions(constraints).then((granted) => {
-            if (granted) {
-              if (originalGetUserMedia) {
-                return originalGetUserMedia(constraints);
-              } else {
-                throw new Error("Original getUserMedia not available.");
-              }
-            } else {
-              throw new DOMException('Permission denied', 'NotAllowedError');
-            }
-          });
-        },
-        writable: false,
-        configurable: false
-      });
-    }
-  }
-
-  interceptGetUserMedia();
-
-  const observer = new MutationObserver(function(mutationsList, observer) {
-    for (const mutation of mutationsList) {
-      if (mutation.type === 'reconfigured' && mutation.name === 'getUserMedia' && mutation.object === navigator.mediaDevices) {
-        interceptGetUserMedia();
-      } else if (mutation.type === 'attributes' && mutation.attributeName === 'getUserMedia' && mutation.target === navigator.mediaDevices) {
-        interceptGetUserMedia();
-      } else if (mutation.type === 'childList' && mutation.addedNodes) {
-        mutation.addedNodes.forEach(node => {
-          if (node === navigator.mediaDevices) {
-            interceptGetUserMedia();
-          }
-        });
-      }
-    }
-  });
-
-  function interceptSpeechRecognition() {
-    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-      return;
-    }
-
-    const OriginalSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    const SpeechRecognitionWrapper = function(...args) {
-      const recognizer = new OriginalSpeechRecognition(...args);
-      const originalStart = recognizer.start.bind(recognizer);
-
-      recognizer.start = function() {
-        requestMediaPermissions({ audio: true }).then(granted => {
-          if (granted) {
-            originalStart();
-          } else {
-            const errorEvent = new SpeechRecognitionErrorEvent('error');
-            errorEvent.error = 'not-allowed'; // This is the standard error for permission denial.
-            recognizer.dispatchEvent(errorEvent);
-          }
-        });
-      };
-
-      return recognizer;
-    };
-
-    SpeechRecognitionWrapper.prototype = OriginalSpeechRecognition.prototype;
-    SpeechRecognitionWrapper.prototype.constructor = SpeechRecognitionWrapper;
-
-    if (window.SpeechRecognition) {
-      window.SpeechRecognition = SpeechRecognitionWrapper;
-    }
-    if (window.webkitSpeechRecognition) {
-      window.webkitSpeechRecognition = SpeechRecognitionWrapper;
-    }
-  }
-
-  interceptSpeechRecognition();
-
-  window.addEventListener('message', function(event) {
-    if (event.data) {
-      if (event.data.type === 'resolveMediaPermission') {
-        const { promiseId, granted } = event.data;
-        if (pendingMediaResolvers[promiseId]) {
-          pendingMediaResolvers[promiseId](granted);
-        }
-      }
-    }
-  });
-
-})();</script><script ws-interception-config="{&quot;parentOrigin&quot;:&quot;https://gemini.google.com&quot;,&quot;proxiedDomains&quot;:[]}" data-bard-client-injected="true">(function(){'use strict';var u=typeof Object.defineProperties=="function"?Object.defineProperty:function(b,d,e){if(b==Array.prototype||b==Object.prototype)return b;b[d]=e.value;return b};function v(b){b=["object"==typeof globalThis&&globalThis,b,"object"==typeof window&&window,"object"==typeof self&&self,"object"==typeof global&&global];for(var d=0;d<b.length;++d){var e=b[d];if(e&&e.Math==Math)return e}throw Error("Cannot find global object");}var w=v(this);
-function y(b,d){if(d)a:{var e=w;b=b.split(".");for(var h=0;h<b.length-1;h++){var k=b[h];if(!(k in e))break a;e=e[k]}b=b[b.length-1];h=e[b];d=d(h);d!=h&&d!=null&&u(e,b,{configurable:!0,writable:!0,value:d})}}function z(b){function d(h){return b.next(h)}function e(h){return b.throw(h)}return new Promise(function(h,k){function m(n){n.done?h(n.value):Promise.resolve(n.value).then(d,e).then(m,k)}m(b.next())})}y("globalThis",function(b){return b||w});/*
-
- Copyright The Closure Library Authors.
- SPDX-License-Identifier: Apache-2.0
-*/
-function A(b,d){function e(){}e.prototype=d.prototype;b.i=d.prototype;b.prototype=new e;b.prototype.constructor=b;b.h=function(h,k,m){for(var n=Array(arguments.length-2),p=2;p<arguments.length;p++)n[p-2]=arguments[p];return d.prototype[k].apply(h,n)}};function B(b,d,e="*"){function h(a){if(typeof a==="string")return F.encode(a).buffer;if(a instanceof ArrayBuffer)return a.slice(0);if(ArrayBuffer.isView(a))return a.buffer.slice(a.byteOffset,a.byteOffset+a.byteLength);throw Error("Invalid data type");}function k(a){a=h(a);var f={type:"send",data:new Uint8Array(a)},g;(g=r)==null||g.postMessage(f,[a])}function m(){if(!r)throw Error("Data port not captured yet.");r.onmessage=a=>{if(a.data.type==="message"){a=new MessageEvent("message",{data:G.decode(a.data.data)});
-let f;(f=c.onmessage)==null||f.call(c,a);c.dispatchEvent(a)}}}function n(){if(!t)throw Error("Control port not captured yet.");t.onmessage=a=>{switch(a.data.type){case "open":l=1;var f=new Event("open"),g;(g=c.onopen)==null||g.call(c,f);c.dispatchEvent(f);q.forEach(H=>{k(H)});q=[];break;case "close":g=a.data;l=3;g=new CloseEvent("close",{code:g.code,reason:g.reason,wasClean:g.wasClean});(f=c.onclose)==null||f.call(c,g);c.dispatchEvent(g);break;case "error":l=3;f=new Event("error");let x;(x=c.onerror)==
-null||x.call(c,f);c.dispatchEvent(f)}}}function p(a){return z(function*(){var f=new MessageChannel;t=f.port1;var g=new MessageChannel;r=g.port1;n();m();window.parent.postMessage({type:"websocket_open",portOrdering:["control","data"],url:b,protocols:a||[],connectionId:I},e,[f.port2,g.port2])}())}var c=Reflect.construct(EventTarget,[],new.target);c.CONNECTING=0;c.OPEN=1;c.CLOSING=2;c.CLOSED=3;c.url=b;c.binaryType="arraybuffer";c.protocol="";c.extensions="";var l=0,t=null,r=null,q=[],F=new TextEncoder,
-G=new TextDecoder;c.onopen=null;c.onmessage=null;c.onclose=null;c.onerror=null;Object.defineProperty(c,"readyState",{get:()=>l,enumerable:!0,configurable:!0});Object.defineProperty(c,"bufferedAmount",{get:()=>{var a=0;q.forEach(f=>{a+=typeof f==="string"?f.length:f.byteLength});return a},enumerable:!0,configurable:!0});var I=function(){var a;return((a=globalThis.crypto)==null?0:a.randomUUID)?globalThis.crypto.randomUUID():"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,f=>{var g=Math.random()*
-16|0;return(f==="x"?g:g&3|8).toString(16)})}();c.send=a=>{if(l===1)a instanceof Blob?a.arrayBuffer().then(f=>{k(f)}):k(a);else if(l===0)if(typeof a==="string")q.push(a);else if(a instanceof ArrayBuffer||ArrayBuffer.isView(a))q.push(h(a));else throw Error("Sending Blob is not supported before the connection is open.");else console.debug("WebSocket send called in CLOSING or CLOSED state; ignored.")};c.close=(a=1E3,f="")=>{if(l!==2&&l!==3){l=2;a={type:"close",code:a,reason:f,wasClean:a===1E3};var g;
-(g=t)==null||g.postMessage(a)}};Promise.resolve().then(()=>p(d));return c}A(B,EventTarget);var C=document.currentScript,D=C==null?void 0:C.getAttribute("ws-interception-config");if(!D)throw Error("WebSocket Interceptor: Missing ws-interception-config attribute in the script tag.");var E=JSON.parse(D);if(!E.parentOrigin||typeof E.parentOrigin!=="string")throw Error("WebSocket Interceptor: Invalid parentOrigin in ws-interception-config");
-(function(b){var d=Object.getOwnPropertyDescriptor(window,"WebSocket");if(!d||d.writable||d.configurable)d=Object.assign(function(e,h){try{let k=(new URL(e)).hostname;if(b.proxiedDomains.some(m=>k===m||k.endsWith(`.${m}`)))return new B(e,h,b.parentOrigin)}catch(k){throw window.parent.postMessage({type:"websocket_blocked",url:e,reason:"blocked_invalid_url"},b.parentOrigin),new DOMException(`WebSocket connection to '${e}' is not allowed in Canvas.`,"SecurityError");}window.parent.postMessage({type:"websocket_blocked",
-url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMException(`WebSocket connection to '${e}' is not allowed in Canvas.`,"SecurityError");},{CONNECTING:0,OPEN:1,CLOSING:2,CLOSED:3}),Object.defineProperty(window,"WebSocket",{value:d,writable:!1,configurable:!1})})({proxiedDomains:E.proxiedDomains||[],parentOrigin:E.parentOrigin});}).call(this);
-</script><script data-bard-client-injected="true">((function(modelInformation) {
-  const originalFetch = window.fetch;
-  // TODO: b/421908508 - Move these out of the script and match all generative AI model calls.
-  let googleLlmBaseApiUrls = [
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':streamGenerateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':generateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predict',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predictLongRunning',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageEditModelName + ':generateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageTransformModelName + ':generateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predict',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predictLongRunning',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.ttsModelName + ':generateContent',
-  ];
-  modelInformation.deprecatedTextModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-    );
-  });
-  modelInformation.deprecatedImageModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predict',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predictLongRunning',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-    );
-  });
-  modelInformation.deprecatedGenerateImageModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-    );
-  });
-  modelInformation.deprecatedImageTransformModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-    );
-  });
-
-  const pendingFetchResolvers = {};
-  let nextPromiseId = 0;
-
-  function handleStringInput(input, optionsArgument) {
-    const actualUrl = input;
-    const fetchCallArgs = [actualUrl, optionsArgument];
-    const effectiveOptions = optionsArgument || {};
-    const bodyForApiKeyCheck = effectiveOptions.body;
-    const bodyForPostMessage = effectiveOptions.body;
-    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
-  }
-
-  function handleRequestInput(input, optionsArgument) {
-    const actualUrl = input.url;
-    const fetchCallArgs = [input, optionsArgument];
-    const effectiveOptions = { method: input.method, headers: new Headers(input.headers) };
-    let bodyForApiKeyCheck;
-    let bodyForPostMessage;
-
-    if (optionsArgument) {
-      if (optionsArgument.method) effectiveOptions.method = optionsArgument.method;
-      if (optionsArgument.headers) effectiveOptions.headers = new Headers(optionsArgument.headers);
-      if ('body' in optionsArgument) {
-        bodyForApiKeyCheck = optionsArgument.body;
-        bodyForPostMessage = optionsArgument.body;
-      } else {
-        bodyForApiKeyCheck = undefined;
-        bodyForPostMessage = input.body;
-      }
-    } else {
-      bodyForApiKeyCheck = undefined;
-      bodyForPostMessage = input.body;
-    }
-    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
-  }
-
-  window.fetch = function(input, optionsArgument) {
-    let actualUrl;
-    let fetchCallArgs;
-    let effectiveOptions = {};
-    let bodyForApiKeyCheck;
-    let bodyForPostMessage;
-
-    if (typeof input === 'string') {
-      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleStringInput(input, optionsArgument));
-    } else if (input instanceof Request) {
-      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleRequestInput(input, optionsArgument));
-    } else {
-      return originalFetch.apply(window, [input, optionsArgument]);
-    }
-
-    effectiveOptions.method = effectiveOptions.method || 'GET';
-    if (!effectiveOptions.headers) {
-      effectiveOptions.headers = new Headers();
-    }
-
-
-    if (typeof actualUrl === 'string' && googleLlmBaseApiUrls.some((url) => actualUrl.startsWith(url))) {
-      let apiKeyIsNull = true;
-
-      const regex = new RegExp("models/([^:]+)");
-      const modelNameMatch = actualUrl.match(regex);
-      const modelName = modelNameMatch ? modelNameMatch[1] : 'unspecified';
-
-
-      try {
-        const urlObject = new URL(actualUrl);  // Use URL object for robust parsing
-        const apiKeyParam = urlObject.searchParams.get('key');
-        if (apiKeyParam) {
-          apiKeyIsNull = false;
-        }
-      } catch (e) {
-        // Continue checks even if URL parsing fails
-      }
-
-      if (apiKeyIsNull && effectiveOptions.headers) {
-        const h = new Headers(effectiveOptions.headers);
-        const apiKeyHeaderValue = h.get('X-API-Key') || h.get('x-api-key');
-        if (apiKeyHeaderValue) {
-          apiKeyIsNull = false;
-          return originalFetch.apply(window, fetchCallArgs);
-        }
-      }
-
-      if (apiKeyIsNull && effectiveOptions.method && ['POST', 'PUT', 'PATCH'].includes(effectiveOptions.method.toUpperCase()) && typeof bodyForApiKeyCheck === 'string') {
-        try {
-          const bodyData = JSON.parse(bodyForApiKeyCheck);
-          if (bodyData && bodyData.apiKey) {
-            apiKeyIsNull = false;
-            return originalFetch.apply(window, fetchCallArgs);
-          }
-        } catch (e) {
-          // Ignore JSON parsing errors
-        }
-      }
-
-      if(apiKeyIsNull) {
-        const promiseId = nextPromiseId++;
-        const promise = new Promise((resolve) => {
-          pendingFetchResolvers[promiseId] = (resolvedResponse) => {
-            delete pendingFetchResolvers[promiseId];
-            resolve(resolvedResponse);
-          };
-        });
-
-        let serializedBodyForPostMessage;
-        if (typeof bodyForPostMessage === 'string' || bodyForPostMessage == null) {
-            serializedBodyForPostMessage = bodyForPostMessage;
-        } else if (bodyForPostMessage instanceof ReadableStream) {
-            serializedBodyForPostMessage = null;
-        } else {
-            try {
-                serializedBodyForPostMessage = JSON.stringify(bodyForPostMessage);
-            } catch (e) {
-                serializedBodyForPostMessage = null;
-            }
-        }
-
-        const messageOptions = {
-            method: effectiveOptions.method,
-            headers: Object.fromEntries(new Headers(effectiveOptions.headers).entries()),
-            body: serializedBodyForPostMessage
-        };
-
-        window.parent.postMessage({
-          type: 'requestFetch',
-          url: actualUrl,
-          modelName: modelName,
-          options: messageOptions,
-          promiseId: promiseId,
-        }, '*');
-
-        return promise;
-      }
-      return originalFetch.apply(window, fetchCallArgs);
-    }
-    return originalFetch.apply(window, fetchCallArgs);
-  };
-
-  window.addEventListener('message', function(event) {
-    if (event.data && event.data.type === 'resolveFetch') {
-      const { promiseId, response } = event.data;
-      if (pendingFetchResolvers[promiseId]) {
-        try {
-          const reconstructedResponse = new Response(response.body, {
-            status: response.status,
-            statusText: response.statusText,
-            headers: new Headers(response.headers),
-          });
-          pendingFetchResolvers[promiseId](reconstructedResponse);
-        } catch (error) {
-          pendingFetchResolvers[promiseId](new Response(null, { status: 500, statusText: "Interceptor Response Reconstruction Error" }));
-        }
-      }
-    }
-  });
-
-}))({"textModelName":"gemini-3-flash-preview","imageModelName":"imagen-4.0-generate-001","imageEditModelName":"gemini-3.1-flash-image","imageTransformModelName":"gemini-3-pro-image","videoModelName":"veo-2.0-generate-001","ttsModelName":"gemini-2.5-flash-preview-tts","deprecatedTextModelNames":["gemini-2.0-flash","gemini-2.5-flash","gemini-2.5-flash-preview-04-17","gemini-2.5-flash-preview-05-20","gemini-2.5-flash-preview-09-2025"],"deprecatedImageModelNames":["imagen-3.0-generate-001","imagen-3.0-generate-002"],"deprecatedGenerateImageModelNames":["gemini-2.5-flash-image-preview","gemini-2.5-flash-image","gemini-3.1-flash-image-preview"],"deprecatedImageTransformModelNames":["gemini-3-pro-image-preview-11-2025"]})</script><script data-bard-client-injected="true">(function() {
-  const OVERLAY_SELECTOR =
-    'dialog[open], [role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"], [role="combobox"]';
-
-  function isVisibleOverlay(element) {
-    if (element.closest('[hidden], [aria-hidden="true"], [inert]')) {
-      return false;
-    }
-    if (window.getComputedStyle(element).visibility === 'hidden') {
-      return false;
-    }
-    for (let cur = element; cur; cur = cur.parentElement) {
-      if (window.getComputedStyle(cur).display === 'none') {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  function hasOpenOverlay() {
-    const candidates = document.querySelectorAll(OVERLAY_SELECTOR);
-    for (let i = 0; i < candidates.length; i++) {
-      if (isVisibleOverlay(candidates[i])) {
-        return true;
-      }
-    }
-    try {
-      if (document.querySelector('[popover]:popover-open')) {
-        return true;
-      }
-    } catch (e) {
-      // Ignore engines that do not support :popover-open.
-    }
-    return false;
-  }
-
-  function isNonEmptySearchInput(target) {
-    return (
-      Boolean(target) &&
-      target.tagName === 'INPUT' &&
-      typeof target.type === 'string' &&
-      target.type.toLowerCase() === 'search' &&
-      typeof target.value === 'string' &&
-      target.value.length > 0
-    );
-  }
-
-  function shouldIgnoreEscape(event) {
-    return (
-      event.key !== 'Escape' ||
-      event.altKey ||
-      event.ctrlKey ||
-      event.metaKey ||
-      event.shiftKey ||
-      event.isComposing ||
-      event.repeat ||
-      event.keyCode === 229 ||
-      isNonEmptySearchInput(event.target)
-    );
-  }
-
-  let shouldIgnoreCaptureState = false;
-
-  window.addEventListener(
-    'keydown',
-    function(event) {
-      if (event.key === 'Escape') {
-        shouldIgnoreCaptureState =
-          hasOpenOverlay() || isNonEmptySearchInput(event.target);
-      }
-    },
-    {capture: true},
-  );
-
-  window.addEventListener('keydown', function(event) {
-    if (
-      shouldIgnoreEscape(event) ||
-      event.defaultPrevented ||
-      shouldIgnoreCaptureState
-    ) {
-      return;
-    }
-    const wasBlockedOnCapture = shouldIgnoreCaptureState;
-    queueMicrotask(function() {
-      if (event.defaultPrevented || wasBlockedOnCapture) {
-        return;
-      }
-      if (window.parent && window.parent !== window) {
-        window.parent.postMessage({'type': 'escapeKey'}, '*');
-      }
-    });
-  });
-})();</script><script data-bard-client-injected="true">(function() {
-  function normalizeSlug(str) {
-    try {
-      return str
-        .trim()
-        .toLowerCase()
-        .replace(/[^p{L}p{N}s_-]/gu, '')
-        .replace(/s+/g, '-');
-    } catch (e) {
-      return str
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9s_-]/g, '')
-        .replace(/s+/g, '-');
-    }
-  }
-
-  function findTargetElement(hash) {
-    if (!hash || hash === '#') {
-      return null;
-    }
-    const rawId = hash.startsWith('#') ? hash.slice(1) : hash;
-    let decodedId = rawId;
-    try {
-      decodedId = decodeURIComponent(rawId);
-    } catch (e) {
-      // Ignore URI malformed errors.
-    }
-
-    // 1. Direct ID match (raw and decoded).
-    let target = document.getElementById(rawId) || document.getElementById(decodedId);
-    if (target) {
-      return target;
-    }
-
-    // 2. Name attribute match (<a name="...">).
-    try {
-      if (typeof CSS !== 'undefined' && CSS.escape) {
-        target =
-          document.querySelector('[name="' + CSS.escape(rawId) + '"]') ||
-          document.querySelector('[name="' + CSS.escape(decodedId) + '"]');
-      } else {
-        const namedElements = document.getElementsByName(rawId);
-        if (namedElements && namedElements.length > 0) {
-          return namedElements[0];
-        }
-      }
-    } catch (e) {
-      // Ignore querySelector syntax errors.
-    }
-    if (target) {
-      return target;
-    }
-
-    // 3. Match heading text by slug (for Markdown TOCs where headings lack explicit IDs).
-    const targetSlug = normalizeSlug(decodedId);
-    if (targetSlug) {
-      for (const heading of document.querySelectorAll('h1, h2, h3, h4, h5, h6')) {
-        if (normalizeSlug(heading.textContent || '') === targetSlug) {
-          return heading;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  document.addEventListener('click', function(event) {
-    const target = event.target;
-    const anchor = target && typeof target.closest === 'function' ? target.closest('a') : null;
-    if (!anchor) {
-      return;
-    }
-
-    const href = anchor.getAttribute('href');
-    if (
-      !href ||
-      href.trim().toLowerCase().startsWith('javascript:') ||
-      anchor.hasAttribute('download')
-    ) {
-      return;
-    }
-
-    // Check if the link is an in-page hash / anchor link.
-    if (href.startsWith('#')) {
-      event.preventDefault();
-      const targetElement = findTargetElement(href);
-      if (targetElement) {
-        targetElement.scrollIntoView({behavior: 'smooth', block: 'start'});
-      }
-      return;
-    }
-
-    // Check if the URL has the same origin/pathname but with a hash.
-    try {
-      const url = new URL(anchor.href, window.location.href);
-      if (
-        url.hash &&
-        url.origin === window.location.origin &&
-        url.pathname === window.location.pathname
-      ) {
-        event.preventDefault();
-        const targetElement = findTargetElement(url.hash);
-        if (targetElement) {
-          targetElement.scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
-        return;
-      }
-    } catch (e) {
-      // Fall through if URL parsing fails.
-    }
-
-    // For all external or full navigation links, prevent iframe-level navigation
-    // (which breaks in AGSA WebView or sandboxed iframes) and ensure they open
-    // safely in a new tab/window.
-    if (anchor.target !== '_blank') {
-      event.preventDefault();
-      window.open(anchor.href, '_blank', 'noopener,noreferrer');
-    }
-  }, {capture: true});
-})();</script><script data-bard-client-injected="true">(function(){'use strict';function a(){window.parent.postMessage({type:"interaction"},"*")}window.addEventListener("click",a,{capture:!0,passive:!0});window.addEventListener("touchstart",a,{capture:!0,passive:!0});window.addEventListener("keydown",a,{capture:!0,passive:!0});}).call(this);
-</script><script data-bard-client-injected="true">(function() {
-  const originalConsoleLog = console.log;
-  const originalConsoleError = console.error;
-
-    /**
-   * Normalizes an error event or a promise rejection reason into a structured error object.
-   * @param {*} errorEventOrReason The error object or reason.
-   * @return {object} Structured error data { message, name, stack }.
-   */
-  function getErrorObject(errorEventOrReason) {
-    if (errorEventOrReason instanceof Error) {
-      return {
-        message: errorEventOrReason.message,
-        name: errorEventOrReason.name,
-        stack: errorEventOrReason.stack,
-      };
-    }
-    // Fallback for non-Error objects.
-    try {
-      return {
-        message: JSON.stringify(errorEventOrReason),
-        name: 'UnknownErrorType',
-        stack: null,
-      };
-    } catch (e) {
-      return {
-        message: String(errorEventOrReason),
-        name: 'UnknownErrorTypeNonStringifiable',
-        stack: null,
-      };
-    }
-  }
-
-  /**
-   * Converts an array of arguments (from log/error) into a single string.
-   * Handles Error objects specially to include their message and stack.
-   * @param {Array<*>} args - Arguments passed to console methods.
-   * @return {string} A string representation of the arguments.
-   */
-  function stringifyArgs(args) {
-    return args
-      .map((arg) => {
-        if (arg instanceof Error) {
-          const {message, stack} = arg;
-          return `Error: ${message}${stack ? ('\nStack: ' + stack) : ''}`;
-        }
-        if (typeof arg === 'object' && arg !== null) {
-          try {
-            return JSON.stringify(arg);
-          } catch (error) {
-            return '[Circular Object]';
-          }
-        } else {
-          return String(arg);
-        }
-      })
-      .join(' ');
-  }
-
-  console.log = function(...args) {
-    const logString = stringifyArgs(args);
-    window.parent.postMessage({ type: 'log', message: logString }, '*');
-    originalConsoleLog.apply(console, args);
-  };
-
-  console.error = function(...args) {
-    let errorData;
-    if (args.length > 0 && args[0] instanceof Error) {
-      const err = args[0];
-      // If the first arg is an Error, capture its details.
-      errorData = {
-        type: 'error',
-        source: 'CONSOLE_ERROR',
-        ...getErrorObject(err),
-        rawArgsString: stringifyArgs(args.slice(1)),
-        timestamp: new Date().toISOString(),
-      };
-    } else {
-      // If not an Error object, treat all args as a general error message.
-      errorData = {
-        type: 'error',
-        source: 'CONSOLE_ERROR',
-        message: stringifyArgs(args),
-        name: 'ConsoleLoggedError',
-        stack: null,
-        timestamp: new Date().toISOString(),
-      };
-    }
-    window.parent.postMessage(errorData, '*');
-    originalConsoleError.apply(console, args);
-  };
-
-  // Listen for global unhandled synchronous errors.
-  window.addEventListener('error', function(event) {
-    const errorDetails = event.error ? getErrorObject(event.error) : {
-      message: event.message,
-      name: 'GlobalError',
-      stack: null,
-      filename: event.filename,
-      lineno: event.lineno,
-      colno: event.colno,
-    };
-
-    window.parent.postMessage({
-      type: 'error',
-      source: 'global',
-      ...errorDetails,
-      message: errorDetails.message || event.message,
-      timestamp: new Date().toISOString(),
-    }, '*');
-  });
-
-  // Listen for unhandled promise rejections (asynchronous errors).
-  window.addEventListener('unhandledrejection', function(event) {
-    const errorDetails = getErrorObject(event.reason);
-
-    window.parent.postMessage({
-      type: 'error',
-      source: 'unhandledrejection',
-      ...errorDetails,
-      message: errorDetails.message || 'Unhandled Promise Rejection',
-      timestamp: new Date().toISOString(),
-    }, '*');
-  });
-
-})();</script>
+<html lang="ko">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>구약 · 신약 읽고 듣고 따라하기</title>
@@ -969,9 +155,9 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       border-radius: 0.375rem;
     }
   </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.sticky{position:sticky}.bottom-0{bottom:0px}.z-30{z-index:30}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mt-0\.5{margin-top:0.125rem}.mt-2{margin-top:0.5rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-9{height:2.25rem}.h-7{height:1.75rem}.min-h-screen{min-height:100vh}.w-9{width:2.25rem}.w-full{width:100%}.w-7{width:1.75rem}.max-w-4xl{max-width:56rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.cursor-pointer{cursor:pointer}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-2\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.625rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.625rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.whitespace-nowrap{white-space:nowrap}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-amber-200{--tw-border-opacity:1;border-color:rgb(253 230 138 / var(--tw-border-opacity, 1))}.border-amber-300{--tw-border-opacity:1;border-color:rgb(252 211 77 / var(--tw-border-opacity, 1))}.border-emerald-200{--tw-border-opacity:1;border-color:rgb(167 243 208 / var(--tw-border-opacity, 1))}.border-emerald-300{--tw-border-opacity:1;border-color:rgb(110 231 183 / var(--tw-border-opacity, 1))}.border-indigo-200{--tw-border-opacity:1;border-color:rgb(199 210 254 / var(--tw-border-opacity, 1))}.border-rose-300{--tw-border-opacity:1;border-color:rgb(253 164 175 / var(--tw-border-opacity, 1))}.border-sky-300{--tw-border-opacity:1;border-color:rgb(125 211 252 / var(--tw-border-opacity, 1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.border-stone-100{--tw-border-opacity:1;border-color:rgb(245 245 244 / var(--tw-border-opacity, 1))}.border-stone-200{--tw-border-opacity:1;border-color:rgb(231 229 228 / var(--tw-border-opacity, 1))}.border-stone-200\/70{border-color:rgb(231 229 228 / 0.7)}.border-stone-300{--tw-border-opacity:1;border-color:rgb(214 211 209 / var(--tw-border-opacity, 1))}.bg-\[\#faf8f5\]{--tw-bg-opacity:1;background-color:rgb(250 248 245 / var(--tw-bg-opacity, 1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235 / var(--tw-bg-opacity, 1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.bg-indigo-100{--tw-bg-opacity:1;background-color:rgb(224 231 255 / var(--tw-bg-opacity, 1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.bg-indigo-700{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.bg-indigo-900{--tw-bg-opacity:1;background-color:rgb(49 46 129 / var(--tw-bg-opacity, 1))}.bg-rose-50{--tw-bg-opacity:1;background-color:rgb(255 241 242 / var(--tw-bg-opacity, 1))}.bg-sky-50{--tw-bg-opacity:1;background-color:rgb(240 249 255 / var(--tw-bg-opacity, 1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-stone-100{--tw-bg-opacity:1;background-color:rgb(245 245 244 / var(--tw-bg-opacity, 1))}.bg-stone-200\/70{background-color:rgb(231 229 228 / 0.7)}.bg-stone-200\/80{background-color:rgb(231 229 228 / 0.8)}.bg-stone-50{--tw-bg-opacity:1;background-color:rgb(250 250 249 / var(--tw-bg-opacity, 1))}.bg-transparent{background-color:transparent}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.p-0\.5{padding:0.125rem}.p-1{padding:0.25rem}.p-4{padding:1rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.pt-1{padding-top:0.25rem}.pt-3{padding-top:0.75rem}.text-center{text-align:center}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.leading-tight{line-height:1.25}.leading-relaxed{line-height:1.625}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77 / var(--tw-text-opacity, 1))}.text-amber-900{--tw-text-opacity:1;color:rgb(120 53 15 / var(--tw-text-opacity, 1))}.text-emerald-800{--tw-text-opacity:1;color:rgb(6 95 70 / var(--tw-text-opacity, 1))}.text-emerald-900{--tw-text-opacity:1;color:rgb(6 78 59 / var(--tw-text-opacity, 1))}.text-indigo-800{--tw-text-opacity:1;color:rgb(55 48 163 / var(--tw-text-opacity, 1))}.text-rose-900{--tw-text-opacity:1;color:rgb(136 19 55 / var(--tw-text-opacity, 1))}.text-sky-900{--tw-text-opacity:1;color:rgb(12 74 110 / var(--tw-text-opacity, 1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-amber-950{--tw-text-opacity:1;color:rgb(69 26 3 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.accent-indigo-700{accent-color:#4338ca}.opacity-75{opacity:0.75}.opacity-80{opacity:0.8}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-indigo-500{--tw-ring-opacity:1;--tw-ring-color:rgb(99 102 241 / var(--tw-ring-opacity, 1))}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:border-indigo-300:hover{--tw-border-opacity:1;border-color:rgb(165 180 252 / var(--tw-border-opacity, 1))}.hover\:bg-emerald-100:hover{--tw-bg-opacity:1;background-color:rgb(209 250 229 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-100:hover{--tw-bg-opacity:1;background-color:rgb(224 231 255 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-800:hover{--tw-bg-opacity:1;background-color:rgb(55 48 163 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-700:hover{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.hover\:bg-stone-100:hover{--tw-bg-opacity:1;background-color:rgb(245 245 244 / var(--tw-bg-opacity, 1))}.hover\:bg-stone-200:hover{--tw-bg-opacity:1;background-color:rgb(231 229 228 / var(--tw-bg-opacity, 1))}.hover\:bg-stone-300:hover{--tw-bg-opacity:1;background-color:rgb(214 211 209 / var(--tw-bg-opacity, 1))}.hover\:bg-stone-50:hover{--tw-bg-opacity:1;background-color:rgb(250 250 249 / var(--tw-bg-opacity, 1))}.hover\:text-slate-900:hover{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.disabled\:opacity-40:disabled{opacity:0.4}@media (min-width: 640px){.sm\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.sm\:p-5{padding:1.25rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\:text-lg{font-size:1.125rem;line-height:1.75rem}.sm\:text-sm{font-size:0.875rem;line-height:1.25rem}.sm\:text-xl{font-size:1.25rem;line-height:1.75rem}}</style></head>
+</head>
 <body class="min-h-screen flex flex-col">
-  <!-- Top Sticky Header & Player Controls -->
+  <!-- Top Header & Player Controls -->
   <header class="themed-header border-b shadow-sm">
     <div class="max-w-4xl mx-auto px-3 sm:px-6 py-3 space-y-2.5">
       <!-- Title & Testament Switcher -->
@@ -998,7 +184,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       </div>
 
       <!-- Chapter Selector Pills -->
-      <div id="chapterTabs" class="flex flex-wrap items-center gap-1.5"><button type="button" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium border transition bg-amber-100 border-amber-300 text-amber-950 font-semibold shadow-sm">시편 1편</button><button type="button" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium border transition bg-white border-stone-200 text-slate-600 hover:bg-stone-50">시편 37편</button><button type="button" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium border transition bg-white border-stone-200 text-slate-600 hover:bg-stone-50">시편 128편</button></div>
+      <div id="chapterTabs" class="flex flex-wrap items-center gap-1.5"></div>
 
       <!-- Player & Options Bar -->
       <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-stone-100">
@@ -1042,7 +228,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
             <select id="speedSelect" class="bg-transparent font-semibold text-indigo-800 focus:outline-none">
               <option value="0.75">0.75×</option>
               <option value="0.9">0.9×</option>
-              <option value="1" selected="">1.0×</option>
+              <option value="1" selected>1.0×</option>
               <option value="1.15">1.15×</option>
               <option value="1.3">1.3×</option>
             </select>
@@ -1050,7 +236,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
 
           <!-- Auto Advance Chapter -->
           <label class="inline-flex items-center gap-1.5 cursor-pointer bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg text-amber-900 font-medium">
-            <input id="autoNextChapter" type="checkbox" checked="" class="accent-indigo-700 rounded">
+            <input id="autoNextChapter" type="checkbox" checked class="accent-indigo-700 rounded">
             <span>한 장씩 자동 넘김</span>
           </label>
 
@@ -1062,7 +248,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         </div>
       </div>
 
-      <!-- Inline Options Drawer inside Header (opens right under the button) -->
+      <!-- Inline Options Drawer inside Header -->
       <div id="optionsModal" class="hidden pt-3 mt-2 border-t space-y-3" style="border-color: var(--border-card)">
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold">⚙ 화면 디자인 · 커서 싱크 미세조정</span>
@@ -1123,10 +309,10 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         <p id="chapterSubtitle" class="text-sm text-slate-500 mt-0.5">Psalm 1 · 복 있는 사람의 길</p>
       </div>
       <div class="flex items-center gap-2">
-        <button id="btnPrevChapter" type="button" class="px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-50 hover:bg-stone-100 text-xs sm:text-sm font-medium text-slate-700 disabled:opacity-40 transition" disabled="">
+        <button id="btnPrevChapter" type="button" class="px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-50 hover:bg-stone-100 text-xs sm:text-sm font-medium text-slate-700 disabled:opacity-40 transition" disabled>
           ← 이전 장
         </button>
-        <span id="chapterProgress" class="text-xs font-semibold text-slate-500 px-1.5">1 / 3</span>
+        <span id="chapterProgress" class="text-xs font-semibold text-slate-500 px-1.5">1 / 4</span>
         <button id="btnNextChapter" type="button" class="px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-50 hover:bg-stone-100 text-xs sm:text-sm font-medium text-slate-700 disabled:opacity-40 transition">
           다음 장 →
         </button>
@@ -1140,22 +326,10 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     </div>
 
     <!-- Verses Container -->
-    <div id="versesContainer" class="space-y-3"><article id="verse-card-0" class="verse-card themed-card rounded-2xl border p-4 sm:p-5 shadow-sm cursor-pointer hover:border-indigo-300"><div class="flex items-start gap-3">
-          <div class="shrink-0 w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center mt-0.5 border bg-stone-100 text-slate-600 border-stone-200" id="badge-0">1</div>
-          <div class="flex-1 space-y-2.5"><p id="sent-0-ko" class="serif-kr text-xl sm:text-2xl leading-relaxed py-0.5"><span class="word-token" data-v="0" data-lang="ko" data-w="0">복</span> <span class="word-token" data-v="0" data-lang="ko" data-w="1">있는</span> <span class="word-token" data-v="0" data-lang="ko" data-w="2">사람은</span> <span class="word-token" data-v="0" data-lang="ko" data-w="3">악인의</span> <span class="word-token" data-v="0" data-lang="ko" data-w="4">꾀를</span> <span class="word-token" data-v="0" data-lang="ko" data-w="5">좇지</span> <span class="word-token" data-v="0" data-lang="ko" data-w="6">아니하며</span> <span class="word-token" data-v="0" data-lang="ko" data-w="7">죄인의</span> <span class="word-token" data-v="0" data-lang="ko" data-w="8">길에</span> <span class="word-token" data-v="0" data-lang="ko" data-w="9">서지</span> <span class="word-token" data-v="0" data-lang="ko" data-w="10">아니하며</span> <span class="word-token" data-v="0" data-lang="ko" data-w="11">오만한</span> <span class="word-token" data-v="0" data-lang="ko" data-w="12">자의</span> <span class="word-token" data-v="0" data-lang="ko" data-w="13">자리에</span> <span class="word-token" data-v="0" data-lang="ko" data-w="14">앉지</span> <span class="word-token" data-v="0" data-lang="ko" data-w="15">아니하고</span></p><p id="sent-0-en" class="themed-en text-lg sm:text-xl leading-relaxed py-0.5"><span class="word-token" data-v="0" data-lang="en" data-w="0">Blessed</span> <span class="word-token" data-v="0" data-lang="en" data-w="1">is</span> <span class="word-token" data-v="0" data-lang="en" data-w="2">the</span> <span class="word-token" data-v="0" data-lang="en" data-w="3">man</span> <span class="word-token" data-v="0" data-lang="en" data-w="4">that</span> <span class="word-token" data-v="0" data-lang="en" data-w="5">walketh</span> <span class="word-token" data-v="0" data-lang="en" data-w="6">not</span> <span class="word-token" data-v="0" data-lang="en" data-w="7">in</span> <span class="word-token" data-v="0" data-lang="en" data-w="8">the</span> <span class="word-token" data-v="0" data-lang="en" data-w="9">counsel</span> <span class="word-token" data-v="0" data-lang="en" data-w="10">of</span> <span class="word-token" data-v="0" data-lang="en" data-w="11">the</span> <span class="word-token" data-v="0" data-lang="en" data-w="12">ungodly,</span> <span class="word-token" data-v="0" data-lang="en" data-w="13">nor</span> <span class="word-token" data-v="0" data-lang="en" data-w="14">standeth</span> <span class="word-token" data-v="0" data-lang="en" data-w="15">in</span> <span class="word-token" data-v="0" data-lang="en" data-w="16">the</span> <span class="word-token" data-v="0" data-lang="en" data-w="17">way</span> <span class="word-token" data-v="0" data-lang="en" data-w="18">of</span> <span class="word-token" data-v="0" data-lang="en" data-w="19">sinners,</span> <span class="word-token" data-v="0" data-lang="en" data-w="20">nor</span> <span class="word-token" data-v="0" data-lang="en" data-w="21">sitteth</span> <span class="word-token" data-v="0" data-lang="en" data-w="22">in</span> <span class="word-token" data-v="0" data-lang="en" data-w="23">the</span> <span class="word-token" data-v="0" data-lang="en" data-w="24">seat</span> <span class="word-token" data-v="0" data-lang="en" data-w="25">of</span> <span class="word-token" data-v="0" data-lang="en" data-w="26">the</span> <span class="word-token" data-v="0" data-lang="en" data-w="27">scornful.</span></p></div></div></article><article id="verse-card-1" class="verse-card themed-card rounded-2xl border p-4 sm:p-5 shadow-sm cursor-pointer hover:border-indigo-300"><div class="flex items-start gap-3">
-          <div class="shrink-0 w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center mt-0.5 border bg-stone-100 text-slate-600 border-stone-200" id="badge-1">2</div>
-          <div class="flex-1 space-y-2.5"><p id="sent-1-ko" class="serif-kr text-xl sm:text-2xl leading-relaxed py-0.5"><span class="word-token" data-v="1" data-lang="ko" data-w="0">오직</span> <span class="word-token" data-v="1" data-lang="ko" data-w="1">여호와의</span> <span class="word-token" data-v="1" data-lang="ko" data-w="2">율법을</span> <span class="word-token" data-v="1" data-lang="ko" data-w="3">즐거워하여</span> <span class="word-token" data-v="1" data-lang="ko" data-w="4">그</span> <span class="word-token" data-v="1" data-lang="ko" data-w="5">율법을</span> <span class="word-token" data-v="1" data-lang="ko" data-w="6">주야로</span> <span class="word-token" data-v="1" data-lang="ko" data-w="7">묵상하는</span> <span class="word-token" data-v="1" data-lang="ko" data-w="8">자로다</span></p><p id="sent-1-en" class="themed-en text-lg sm:text-xl leading-relaxed py-0.5"><span class="word-token" data-v="1" data-lang="en" data-w="0">But</span> <span class="word-token" data-v="1" data-lang="en" data-w="1">his</span> <span class="word-token" data-v="1" data-lang="en" data-w="2">delight</span> <span class="word-token" data-v="1" data-lang="en" data-w="3">is</span> <span class="word-token" data-v="1" data-lang="en" data-w="4">in</span> <span class="word-token" data-v="1" data-lang="en" data-w="5">the</span> <span class="word-token" data-v="1" data-lang="en" data-w="6">law</span> <span class="word-token" data-v="1" data-lang="en" data-w="7">of</span> <span class="word-token" data-v="1" data-lang="en" data-w="8">the</span> <span class="word-token" data-v="1" data-lang="en" data-w="9">LORD;</span> <span class="word-token" data-v="1" data-lang="en" data-w="10">and</span> <span class="word-token" data-v="1" data-lang="en" data-w="11">in</span> <span class="word-token" data-v="1" data-lang="en" data-w="12">his</span> <span class="word-token" data-v="1" data-lang="en" data-w="13">law</span> <span class="word-token" data-v="1" data-lang="en" data-w="14">doth</span> <span class="word-token" data-v="1" data-lang="en" data-w="15">he</span> <span class="word-token" data-v="1" data-lang="en" data-w="16">meditate</span> <span class="word-token" data-v="1" data-lang="en" data-w="17">day</span> <span class="word-token" data-v="1" data-lang="en" data-w="18">and</span> <span class="word-token" data-v="1" data-lang="en" data-w="19">night.</span></p></div></div></article><article id="verse-card-2" class="verse-card themed-card rounded-2xl border p-4 sm:p-5 shadow-sm cursor-pointer hover:border-indigo-300"><div class="flex items-start gap-3">
-          <div class="shrink-0 w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center mt-0.5 border bg-stone-100 text-slate-600 border-stone-200" id="badge-2">3</div>
-          <div class="flex-1 space-y-2.5"><p id="sent-2-ko" class="serif-kr text-xl sm:text-2xl leading-relaxed py-0.5"><span class="word-token" data-v="2" data-lang="ko" data-w="0">저는</span> <span class="word-token" data-v="2" data-lang="ko" data-w="1">시냇가에</span> <span class="word-token" data-v="2" data-lang="ko" data-w="2">심은</span> <span class="word-token" data-v="2" data-lang="ko" data-w="3">나무가</span> <span class="word-token" data-v="2" data-lang="ko" data-w="4">시절을</span> <span class="word-token" data-v="2" data-lang="ko" data-w="5">좇아</span> <span class="word-token" data-v="2" data-lang="ko" data-w="6">과실을</span> <span class="word-token" data-v="2" data-lang="ko" data-w="7">맺으며</span> <span class="word-token" data-v="2" data-lang="ko" data-w="8">그</span> <span class="word-token" data-v="2" data-lang="ko" data-w="9">잎사귀가</span> <span class="word-token" data-v="2" data-lang="ko" data-w="10">마르지</span> <span class="word-token" data-v="2" data-lang="ko" data-w="11">아니함</span> <span class="word-token" data-v="2" data-lang="ko" data-w="12">같으니</span> <span class="word-token" data-v="2" data-lang="ko" data-w="13">그</span> <span class="word-token" data-v="2" data-lang="ko" data-w="14">행사가</span> <span class="word-token" data-v="2" data-lang="ko" data-w="15">다</span> <span class="word-token" data-v="2" data-lang="ko" data-w="16">형통하리로다</span></p><p id="sent-2-en" class="themed-en text-lg sm:text-xl leading-relaxed py-0.5"><span class="word-token" data-v="2" data-lang="en" data-w="0">And</span> <span class="word-token" data-v="2" data-lang="en" data-w="1">he</span> <span class="word-token" data-v="2" data-lang="en" data-w="2">shall</span> <span class="word-token" data-v="2" data-lang="en" data-w="3">be</span> <span class="word-token" data-v="2" data-lang="en" data-w="4">like</span> <span class="word-token" data-v="2" data-lang="en" data-w="5">a</span> <span class="word-token" data-v="2" data-lang="en" data-w="6">tree</span> <span class="word-token" data-v="2" data-lang="en" data-w="7">planted</span> <span class="word-token" data-v="2" data-lang="en" data-w="8">by</span> <span class="word-token" data-v="2" data-lang="en" data-w="9">the</span> <span class="word-token" data-v="2" data-lang="en" data-w="10">rivers</span> <span class="word-token" data-v="2" data-lang="en" data-w="11">of</span> <span class="word-token" data-v="2" data-lang="en" data-w="12">water,</span> <span class="word-token" data-v="2" data-lang="en" data-w="13">that</span> <span class="word-token" data-v="2" data-lang="en" data-w="14">bringeth</span> <span class="word-token" data-v="2" data-lang="en" data-w="15">forth</span> <span class="word-token" data-v="2" data-lang="en" data-w="16">his</span> <span class="word-token" data-v="2" data-lang="en" data-w="17">fruit</span> <span class="word-token" data-v="2" data-lang="en" data-w="18">in</span> <span class="word-token" data-v="2" data-lang="en" data-w="19">his</span> <span class="word-token" data-v="2" data-lang="en" data-w="20">season;</span> <span class="word-token" data-v="2" data-lang="en" data-w="21">his</span> <span class="word-token" data-v="2" data-lang="en" data-w="22">leaf</span> <span class="word-token" data-v="2" data-lang="en" data-w="23">also</span> <span class="word-token" data-v="2" data-lang="en" data-w="24">shall</span> <span class="word-token" data-v="2" data-lang="en" data-w="25">not</span> <span class="word-token" data-v="2" data-lang="en" data-w="26">wither;</span> <span class="word-token" data-v="2" data-lang="en" data-w="27">and</span> <span class="word-token" data-v="2" data-lang="en" data-w="28">whatsoever</span> <span class="word-token" data-v="2" data-lang="en" data-w="29">he</span> <span class="word-token" data-v="2" data-lang="en" data-w="30">doeth</span> <span class="word-token" data-v="2" data-lang="en" data-w="31">shall</span> <span class="word-token" data-v="2" data-lang="en" data-w="32">prosper.</span></p></div></div></article><article id="verse-card-3" class="verse-card themed-card rounded-2xl border p-4 sm:p-5 shadow-sm cursor-pointer hover:border-indigo-300"><div class="flex items-start gap-3">
-          <div class="shrink-0 w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center mt-0.5 border bg-stone-100 text-slate-600 border-stone-200" id="badge-3">4</div>
-          <div class="flex-1 space-y-2.5"><p id="sent-3-ko" class="serif-kr text-xl sm:text-2xl leading-relaxed py-0.5"><span class="word-token" data-v="3" data-lang="ko" data-w="0">악인은</span> <span class="word-token" data-v="3" data-lang="ko" data-w="1">그렇지</span> <span class="word-token" data-v="3" data-lang="ko" data-w="2">않음이여</span> <span class="word-token" data-v="3" data-lang="ko" data-w="3">오직</span> <span class="word-token" data-v="3" data-lang="ko" data-w="4">바람에</span> <span class="word-token" data-v="3" data-lang="ko" data-w="5">나는</span> <span class="word-token" data-v="3" data-lang="ko" data-w="6">겨와</span> <span class="word-token" data-v="3" data-lang="ko" data-w="7">같도다</span></p><p id="sent-3-en" class="themed-en text-lg sm:text-xl leading-relaxed py-0.5"><span class="word-token" data-v="3" data-lang="en" data-w="0">The</span> <span class="word-token" data-v="3" data-lang="en" data-w="1">ungodly</span> <span class="word-token" data-v="3" data-lang="en" data-w="2">are</span> <span class="word-token" data-v="3" data-lang="en" data-w="3">not</span> <span class="word-token" data-v="3" data-lang="en" data-w="4">so:</span> <span class="word-token" data-v="3" data-lang="en" data-w="5">but</span> <span class="word-token" data-v="3" data-lang="en" data-w="6">are</span> <span class="word-token" data-v="3" data-lang="en" data-w="7">like</span> <span class="word-token" data-v="3" data-lang="en" data-w="8">the</span> <span class="word-token" data-v="3" data-lang="en" data-w="9">chaff</span> <span class="word-token" data-v="3" data-lang="en" data-w="10">which</span> <span class="word-token" data-v="3" data-lang="en" data-w="11">the</span> <span class="word-token" data-v="3" data-lang="en" data-w="12">wind</span> <span class="word-token" data-v="3" data-lang="en" data-w="13">driveth</span> <span class="word-token" data-v="3" data-lang="en" data-w="14">away.</span></p></div></div></article><article id="verse-card-4" class="verse-card themed-card rounded-2xl border p-4 sm:p-5 shadow-sm cursor-pointer hover:border-indigo-300"><div class="flex items-start gap-3">
-          <div class="shrink-0 w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center mt-0.5 border bg-stone-100 text-slate-600 border-stone-200" id="badge-4">5</div>
-          <div class="flex-1 space-y-2.5"><p id="sent-4-ko" class="serif-kr text-xl sm:text-2xl leading-relaxed py-0.5"><span class="word-token" data-v="4" data-lang="ko" data-w="0">그러므로</span> <span class="word-token" data-v="4" data-lang="ko" data-w="1">악인이</span> <span class="word-token" data-v="4" data-lang="ko" data-w="2">심판을</span> <span class="word-token" data-v="4" data-lang="ko" data-w="3">견디지</span> <span class="word-token" data-v="4" data-lang="ko" data-w="4">못하며</span> <span class="word-token" data-v="4" data-lang="ko" data-w="5">죄인이</span> <span class="word-token" data-v="4" data-lang="ko" data-w="6">의인의</span> <span class="word-token" data-v="4" data-lang="ko" data-w="7">회중에</span> <span class="word-token" data-v="4" data-lang="ko" data-w="8">들지</span> <span class="word-token" data-v="4" data-lang="ko" data-w="9">못하리로다</span></p><p id="sent-4-en" class="themed-en text-lg sm:text-xl leading-relaxed py-0.5"><span class="word-token" data-v="4" data-lang="en" data-w="0">Therefore</span> <span class="word-token" data-v="4" data-lang="en" data-w="1">the</span> <span class="word-token" data-v="4" data-lang="en" data-w="2">ungodly</span> <span class="word-token" data-v="4" data-lang="en" data-w="3">shall</span> <span class="word-token" data-v="4" data-lang="en" data-w="4">not</span> <span class="word-token" data-v="4" data-lang="en" data-w="5">stand</span> <span class="word-token" data-v="4" data-lang="en" data-w="6">in</span> <span class="word-token" data-v="4" data-lang="en" data-w="7">the</span> <span class="word-token" data-v="4" data-lang="en" data-w="8">judgment,</span> <span class="word-token" data-v="4" data-lang="en" data-w="9">nor</span> <span class="word-token" data-v="4" data-lang="en" data-w="10">sinners</span> <span class="word-token" data-v="4" data-lang="en" data-w="11">in</span> <span class="word-token" data-v="4" data-lang="en" data-w="12">the</span> <span class="word-token" data-v="4" data-lang="en" data-w="13">congregation</span> <span class="word-token" data-v="4" data-lang="en" data-w="14">of</span> <span class="word-token" data-v="4" data-lang="en" data-w="15">the</span> <span class="word-token" data-v="4" data-lang="en" data-w="16">righteous.</span></p></div></div></article><article id="verse-card-5" class="verse-card themed-card rounded-2xl border p-4 sm:p-5 shadow-sm cursor-pointer hover:border-indigo-300"><div class="flex items-start gap-3">
-          <div class="shrink-0 w-7 h-7 rounded-full font-bold text-xs flex items-center justify-center mt-0.5 border bg-stone-100 text-slate-600 border-stone-200" id="badge-5">6</div>
-          <div class="flex-1 space-y-2.5"><p id="sent-5-ko" class="serif-kr text-xl sm:text-2xl leading-relaxed py-0.5"><span class="word-token" data-v="5" data-lang="ko" data-w="0">대저</span> <span class="word-token" data-v="5" data-lang="ko" data-w="1">의인의</span> <span class="word-token" data-v="5" data-lang="ko" data-w="2">길은</span> <span class="word-token" data-v="5" data-lang="ko" data-w="3">여호와께서</span> <span class="word-token" data-v="5" data-lang="ko" data-w="4">인정하시나</span> <span class="word-token" data-v="5" data-lang="ko" data-w="5">악인의</span> <span class="word-token" data-v="5" data-lang="ko" data-w="6">길은</span> <span class="word-token" data-v="5" data-lang="ko" data-w="7">망하리로다</span></p><p id="sent-5-en" class="themed-en text-lg sm:text-xl leading-relaxed py-0.5"><span class="word-token" data-v="5" data-lang="en" data-w="0">For</span> <span class="word-token" data-v="5" data-lang="en" data-w="1">the</span> <span class="word-token" data-v="5" data-lang="en" data-w="2">LORD</span> <span class="word-token" data-v="5" data-lang="en" data-w="3">knoweth</span> <span class="word-token" data-v="5" data-lang="en" data-w="4">the</span> <span class="word-token" data-v="5" data-lang="en" data-w="5">way</span> <span class="word-token" data-v="5" data-lang="en" data-w="6">of</span> <span class="word-token" data-v="5" data-lang="en" data-w="7">the</span> <span class="word-token" data-v="5" data-lang="en" data-w="8">righteous:</span> <span class="word-token" data-v="5" data-lang="en" data-w="9">but</span> <span class="word-token" data-v="5" data-lang="en" data-w="10">the</span> <span class="word-token" data-v="5" data-lang="en" data-w="11">way</span> <span class="word-token" data-v="5" data-lang="en" data-w="12">of</span> <span class="word-token" data-v="5" data-lang="en" data-w="13">the</span> <span class="word-token" data-v="5" data-lang="en" data-w="14">ungodly</span> <span class="word-token" data-v="5" data-lang="en" data-w="15">shall</span> <span class="word-token" data-v="5" data-lang="en" data-w="16">perish.</span></p></div></div></article></div>
+    <div id="versesContainer" class="space-y-3"></div>
   </main>
 
-  <!-- Slim Bottom Sticky Mini-Player (never covers reading area) -->
+  <!-- Slim Bottom Sticky Mini-Player -->
   <div class="sticky bottom-0 z-30 themed-header border-t shadow-lg px-3 py-2">
     <div class="max-w-4xl mx-auto flex items-center justify-between gap-2">
       <div class="flex items-center gap-1.5">
@@ -1183,7 +357,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
   </div>
 
   <footer class="max-w-4xl w-full mx-auto px-4 py-6 text-center text-xs text-slate-400 border-t border-stone-200/70">
-    구약 (시편 1 · 37 · 128편) · 신약 (마태복음 6:9–13 주기도문 · 마태복음 5:1–12 팔복) — 개역한글(1961) &amp; KJV
+    구약 (시편 1 · 37 · 91 · 128편) · 신약 (마태복음 6:9–13 주기도문 · 마태복음 5:1–12 팔복) — 개역한글(1961) &amp; KJV
   </footer>
 
   <script>
@@ -1252,6 +426,30 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           ]
         },
         {
+          id: 'psalm91',
+          title: '시편 91편',
+          subtitle: 'Psalm 91 · 지존자의 은밀한 곳에 거하는 자',
+          ref: '개역한글 · KJV (1–16절)',
+          verses: [
+            { v: 1, ko: '지존자의 은밀한 곳에 거하는 자는 전능하신 자의 그늘 아래 거하리로다', en: 'He that dwelleth in the secret place of the most High shall abide under the shadow of the Almighty.' },
+            { v: 2, ko: '내가 여호와를 가리켜 말하기를 저는 나의 피난처요 나의 요새요 나의 의뢰하는 하나님이라 하리니', en: 'I will say of the LORD, He is my refuge and my fortress: my God; in him will I trust.' },
+            { v: 3, ko: '이는 저가 너를 새 사냥군의 올무에서와 극한 염병에서 건지실 것임이로다', en: 'Surely he shall deliver thee from the snare of the fowler, and from the noisome pestilence.' },
+            { v: 4, ko: '저가 너를 그 깃으로 덮으시리니 네가 그 날개 아래 피하리로다 그의 진실함은 방패와 손 방패가 되나니', en: 'He shall cover thee with his feathers, and under his wings shalt thou trust: his truth shall be thy shield and buckler.' },
+            { v: 5, ko: '너는 밤에 놀램과 낮에 흐르는 살과', en: 'Thou shalt not be afraid for the terror by night; nor for the arrow that flieth by day;' },
+            { v: 6, ko: '흑암 중에 행하는 염병과 백주에 황폐케 하는 파멸을 두려워 아니하리로다', en: 'Nor for the pestilence that walketh in darkness; nor for the destruction that wasteth at noonday.' },
+            { v: 7, ko: '천인이 네 곁에서, 만인이 네 우편에서 엎드러지나 이 재앙이 네게 가까이 못하리로다', en: 'A thousand shall fall at thy side, and ten thousand at thy right hand; but it shall not come nigh thee.' },
+            { v: 8, ko: '오직 너는 목도하리니 악인의 보응이 네게 보이리로다', en: 'Only with thine eyes shalt thou behold and see the reward of the wicked.' },
+            { v: 9, ko: '네가 말하기를 여호와는 나의 피난처시라 하고 지존자로 거처를 삼았으므로', en: 'Because thou hast made the LORD, which is my refuge, even the most High, thy habitation;' },
+            { v: 10, ko: '화가 네게 미치지 못하며 재앙이 네 장막에 가까이 오지 못하리니', en: 'There shall no evil befall thee, neither shall any plague come nigh thy dwelling.' },
+            { v: 11, ko: '저가 너를 위하여 그 사자들을 명하사 네 모든 길에 너를 지키게 하심이라', en: 'For he shall give his angels charge over thee, to keep thee in all thy ways.' },
+            { v: 12, ko: '저희가 그 손으로 너를 붙들어 발이 돌에 부딪히지 않게 하리로다', en: 'They shall bear thee up in their hands, lest thou dash thy foot against a stone.' },
+            { v: 13, ko: '네가 사자와 독사를 밟으며 젊은 사자와 뱀을 발로 누르리로다', en: 'Thou shalt tread upon the lion and adder: the young lion and the dragon shalt thou trample under feet.' },
+            { v: 14, ko: '하나님이 가라사대 저가 나를 사랑한즉 내가 저를 건지리라 저가 내 이름을 안즉 내가 저를 높이리라', en: 'Because he hath set his love upon me, therefore will I deliver him: I will set him on high, because he hath known my name.' },
+            { v: 15, ko: '저가 내게 간구하리니 내가 응답하리라 저희 환난 때에 내가 저와 함께 하여 저를 건지고 영화롭게 하리라', en: 'He shall call upon me, and I will answer him: I will be with him in trouble; I will deliver him, and honour him.' },
+            { v: 16, ko: '내가 장수함으로 저를 만족케 하며 나의 구원으로 보이리라 하시도다', en: 'With long life will I satisfy him, and shew him my salvation.' }
+          ]
+        },
+        {
           id: 'psalm128',
           title: '시편 128편',
           subtitle: 'Psalm 128 · 여호와를 경외하는 자의 복',
@@ -1262,7 +460,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
             { v: 3, ko: '네 집 내실에 있는 네 아내는 결실한 포도나무 같으며 네 상에 둘린 자식은 어린 감람나무 같으리로다', en: 'Thy wife shall be as a fruitful vine by the sides of thine house: thy children like olive plants round about thy table.' },
             { v: 4, ko: '여호와를 경외하는 자는 이같이 복을 얻으리로다', en: 'Behold, that thus shall the man be blessed that feareth the LORD.' },
             { v: 5, ko: '여호와께서 시온에서 네게 복을 주실지어다 너는 평생에 예루살렘의 복을 보며', en: 'The LORD shall bless thee out of Zion: and thou shalt see the good of Jerusalem all the days of thy life.' },
-            { v: 6, ko: '네 자식의 자식을 볼지어다 이스라엘에게 평강이 있을지로다', en: 'Yea, thou shalt see thy children\'s children, and peace upon Israel.' }
+            { v: 6, ko: '네 자식의 자식을 볼지어다 이스라엘에게 평강이 있을지로다', en: 'Yea, thou shalt see thy children's children, and peace upon Israel.' }
           ]
         }
       ],
@@ -1270,7 +468,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         {
           id: 'matthew6_lords_prayer',
           title: '마태복음 6:9–13 (주기도문)',
-          subtitle: 'The Lord\'s Prayer · Matthew 6:9–13',
+          subtitle: 'The Lord's Prayer · Matthew 6:9–13',
           ref: '전통 기도문 · KJV (9–13절)',
           verses: [
             { v: 9, ko: '하늘에 계신 우리 아버지여, 이름이 거룩히 여김을 받으시오며,', en: 'Our Father which art in heaven, Hallowed be thy name.' },
@@ -1295,7 +493,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
             { v: 7, ko: '긍휼히 여기는 자는 복이 있나니 저희가 긍휼히 여김을 받을 것임이요', en: 'Blessed are the merciful: for they shall obtain mercy.' },
             { v: 8, ko: '마음이 청결한 자는 복이 있나니 저희가 하나님을 볼 것임이요', en: 'Blessed are the pure in heart: for they shall see God.' },
             { v: 9, ko: '화평케 하는 자는 복이 있나니 저희가 하나님의 아들이라 일컬음을 받을 것임이요', en: 'Blessed are the peacemakers: for they shall be called the children of God.' },
-            { v: 10, ko: '의를 위하여 핍박을 받은 자는 복이 있나니 천국이 저희 것임이라', en: 'Blessed are they which are persecuted for righteousness\' sake: for theirs is the kingdom of heaven.' },
+            { v: 10, ko: '의를 위하여 핍박을 받은 자는 복이 있나니 천국이 저희 것임이라', en: 'Blessed are they which are persecuted for righteousness' sake: for theirs is the kingdom of heaven.' },
             { v: 11, ko: '나를 인하여 너희를 욕하고 핍박하고 거짓으로 너희를 거스려 모든 악한 말을 할 때에는 너희에게 복이 있나니', en: 'Blessed are ye, when men shall revile you, and persecute you, and shall say all manner of evil against you falsely, for my sake.' },
             { v: 12, ko: '기뻐하고 즐거워하라 하늘에서 너희의 상이 큼이라 너희 전에 있던 선지자들을 이같이 핍박하였느니라', en: 'Rejoice, and be exceeding glad: for great is your reward in heaven: for so persecuted they the prophets which were before you.' }
           ]
@@ -1317,15 +515,15 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     } catch (e) {}
 
     const state = {
-      testament: 'old', // 'old' | 'new'
+      testament: 'old',
       chapterIdx: 0,
-      displayMode: 'both', // 'both' | 'ko' | 'en'
+      displayMode: 'both',
       speed: 1.0,
       autoNextChapter: true,
       isPlaying: false,
       isPaused: false,
       activeVerseIdx: 0,
-      activeLang: 'ko', // 'ko' | 'en'
+      activeLang: 'ko',
       activeWordIdx: -1,
       wakeLock: null
     };
@@ -1401,7 +599,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           state.chapterIdx = idx;
           state.activeVerseIdx = 0;
           state.activeWordIdx = -1;
-                renderAll();
+          renderAll();
         });
         els.chapterTabs.appendChild(btn);
       });
@@ -1507,7 +705,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         if (!(state.isPlaying || state.isPaused)) return;
         if (vIdx !== state.activeVerseIdx) return;
 
-        // If currently on English in 'both' mode, Korean sentence of the same verse is already finished
         if (state.displayMode === 'both' && state.activeLang === 'en' && lang === 'ko') {
           el.classList.add('word-done');
           return;
@@ -1759,7 +956,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         utter.onend = () => {
           if (settled) return;
           settled = true;
-          // Calibrate speaking rate from actual TTS duration (subtracting ~450ms post-speech tail)
           if (sweepStartTime !== null && totalWeight > 0) {
             const actualMs = Math.max(800, (performance.now() - sweepStartTime) - 450);
             const measuredRate = (actualMs * state.speed) / totalWeight;
@@ -1779,7 +975,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           fallbackTimerId = setTimeout(finishSentence, estMs);
         };
 
-        // If onstart hasn't fired after 1.5s, start visual sweep fallback & show hint
         setTimeout(() => {
           if (!ttsStarted && !settled && session === playSessionId && state.isPlaying && !state.isPaused) {
             els.ttsWarning.classList.remove('hidden');
@@ -1788,7 +983,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           }
         }, 1500);
 
-        // Safety watchdog in case browser speechSynthesis stalls silently
         fallbackTimerId = setTimeout(() => {
           if (!settled && session === playSessionId && state.isPlaying && !state.isPaused) {
             settled = true;
@@ -1867,7 +1061,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       updatePlayControls();
     }
 
-    // Event Bindings
     els.tabOld.addEventListener('click', () => {
       if (state.testament === 'old') return;
       stopPlayback();
@@ -2112,7 +1305,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     document.getElementById('btnCloseOptions').addEventListener('click', closeOptionsModal);
     document.getElementById('btnDoneOptions').addEventListener('click', closeOptionsModal);
 
-
     document.querySelectorAll('.opt-theme').forEach((btn) => {
       btn.addEventListener('click', () => {
         design.theme = btn.dataset.theme;
@@ -2165,5 +1357,5 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     applyDesign(false);
     renderAll();
   </script>
-
-</body></html>
+</body>
+</html>
