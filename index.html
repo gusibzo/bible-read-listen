@@ -154,6 +154,327 @@
       padding-left: 0.75rem;
       border-radius: 0.375rem;
     }
+/* One-verse reader */
+#verseReader[hidden] {
+  display: none;
+}
+
+#verseReader {
+  --vr-accent: var(--hl-active-ink, #92400e);
+  --vr-accent-bg: var(--hl-active-bg, #fef3c7);
+  --vr-accent-ring: var(--hl-active-ring, #fde68a);
+  --vr-border: var(--border-card, #e7e5e4);
+  --vr-radius: 1.25rem;
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: max(.5rem, env(safe-area-inset-top)) max(.5rem, env(safe-area-inset-right))
+    max(.35rem, env(safe-area-inset-bottom)) max(.5rem, env(safe-area-inset-left));
+  overflow: hidden;
+  color: var(--ink-main, #1e293b);
+  background: var(--bg-page, #faf8f5);
+}
+
+#verseReader[open] {
+  display: grid;
+}
+
+#verseReader .vr-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .625rem 1rem;
+  padding: .65rem;
+  background: var(--bg-header, #fff);
+  border: 1px solid var(--vr-border);
+  border-radius: var(--vr-radius) var(--vr-radius) 0 0;
+}
+
+#verseReader .vr-head {
+  display: flex;
+  flex: 1 0 100%;
+  align-items: center;
+  gap: .5rem;
+}
+
+#vrChapter {
+  max-width: 100%;
+  min-width: 0;
+}
+
+#verseReader .vr-nav,
+#verseReader .vr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .375rem;
+  min-width: 0;
+}
+
+.vr-button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: .5rem .75rem;
+  color: var(--ink-main, #1e293b);
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border-card, #d6d3d1);
+  border-radius: .625rem;
+  font: inherit;
+  font-size: .875rem;
+  font-weight: 650;
+  line-height: 1.25;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.vr-button.vr-primary,
+.vr-button[aria-pressed="true"] {
+  color: var(--hl-active-ink, #92400e);
+  background: var(--hl-active-bg, #fef3c7);
+  border-color: var(--hl-active-ring, #fde68a);
+}
+
+.vr-button:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .vr-button:not(:disabled):hover {
+    border-color: var(--hl-active-ink, #92400e);
+  }
+}
+
+.vr-button:focus-visible,
+#verseReader .vr-feed:focus-visible,
+.vr-dialog textarea:focus-visible {
+  outline: 2px solid var(--hl-active-ink, #92400e);
+  outline-offset: 2px;
+}
+
+#verseReader .vr-feed {
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: thin;
+  background: var(--bg-page, #faf8f5);
+  border: 1px solid var(--vr-border);
+  border-block-start: 0;
+  border-radius: 0 0 var(--vr-radius) var(--vr-radius);
+}
+
+#verseReader .vr-slide {
+  box-sizing: border-box;
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  padding: clamp(.75rem, 3vw, 1.75rem);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+#verseReader .vr-card {
+  width: min(100%, 40rem);
+  padding: clamp(1.125rem, 4.5vw, 2.5rem);
+  overflow-wrap: anywhere;
+  color: inherit;
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--vr-border);
+  border-block-start: .25rem solid var(--vr-accent-ring);
+  border-radius: var(--vr-radius);
+  box-shadow: 0 .375rem 1.5rem rgb(28 33 41 / 8%);
+}
+
+#verseReader .vr-card:focus-visible,
+#verseReader .vr-card .vr-ref:focus-visible {
+  outline: 2px solid var(--vr-accent);
+  outline-offset: .2rem;
+}
+
+#verseReader .vr-card.vr-active,
+#verseReader .vr-active .vr-card {
+  border-block-start-color: var(--vr-accent);
+}
+
+#verseReader .vr-ref {
+  margin-block: 0 .8rem;
+  color: var(--vr-accent);
+  font-size: .9rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+#verseReader .vr-ko,
+#verseReader .vr-en {
+  margin: 0;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+#verseReader .vr-ko {
+  font-family: "Noto Serif KR", Georgia, serif;
+  font-size: clamp(1.3rem, 4.4vw, 2rem);
+  font-weight: 600;
+  word-break: keep-all;
+}
+
+#verseReader .vr-en {
+  color: var(--ink-en, #475569);
+  font-family: Georgia, serif;
+  font-size: clamp(1.05rem, 3vw, 1.35rem);
+}
+
+#verseReader .vr-ko:not([hidden]) + .vr-en:not([hidden]) {
+  margin-block-start: 1rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid var(--vr-border);
+}
+
+#verseReader .vr-status {
+  min-height: 1.5em;
+  margin-block: .5rem 0;
+  color: var(--ink-muted, #64748b);
+  font-size: .875rem;
+}
+
+.vr-dialog {
+  position: fixed;
+  inset: 0;
+  width: min(32rem, calc(100% - 2rem));
+  max-height: min(85vh, 42rem);
+  max-height: min(85dvh, 42rem);
+  margin: auto;
+  padding: clamp(1rem, 4vw, 1.5rem);
+  overflow: auto;
+  color: var(--ink-main, #1e293b);
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border-card, #e7e5e4);
+  border-radius: 1rem;
+}
+
+.vr-dialog::backdrop {
+  background: rgb(15 23 42 / 55%);
+}
+
+.vr-dialog h2,
+.vr-dialog h3 {
+  font-weight: 700;
+}
+
+.vr-dialog-close {
+  float: inline-end;
+  margin-inline-start: .75rem;
+}
+
+.vr-dialog .vr-ref {
+  color: var(--hl-active-ink, #92400e);
+  font-weight: 700;
+}
+
+.vr-dialog label {
+  display: block;
+  margin-block: .75rem .35rem;
+}
+
+.vr-dialog textarea + .vr-button {
+  margin-block-start: .65rem;
+}
+
+.vr-dialog .vr-status {
+  color: var(--ink-muted, #64748b);
+  font-size: .875rem;
+}
+
+.vr-dialog h2 {
+  margin-block: 0 .8rem;
+  font-size: 1.2rem;
+}
+
+.vr-dialog h3 {
+  margin-block: .9rem .2rem;
+  font-size: .95rem;
+}
+
+.vr-dialog p {
+  margin-block: .25rem .75rem;
+  line-height: 1.6;
+}
+
+.vr-dialog textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 7rem;
+  padding: .65rem;
+  color: inherit;
+  background: var(--bg-page, #faf8f5);
+  border: 1px solid var(--border-card, #e7e5e4);
+  border-radius: .5rem;
+  font: inherit;
+  resize: vertical;
+}
+
+.vr-dialog menu,
+.vr-dialog .vr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: .5rem;
+  margin-block: .75rem 0;
+  padding: 0;
+}
+
+@media (max-width: 38rem) {
+  #verseReader .vr-toolbar {
+    gap: .4rem;
+    padding: .5rem;
+  }
+
+  #verseReader .vr-nav,
+  #verseReader .vr-actions {
+    gap: .25rem;
+  }
+
+  #verseReader .vr-button {
+    padding-inline: .6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #verseReader .vr-feed {
+    scroll-behavior: auto;
+  }
+}
+
+#verseReader[data-font-size="normal"] .vr-ko {
+  font-size: clamp(1.125rem, 3.7vw, 1.5rem);
+}
+
+#verseReader[data-font-size="normal"] .vr-en {
+  font-size: clamp(1rem, 2.7vw, 1.2rem);
+}
+
+#verseReader[data-font-size="xlarge"] .vr-ko {
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+}
+
+#verseReader[data-font-size="xlarge"] .vr-en {
+  font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+}
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -312,7 +633,8 @@
         <button id="btnPrevChapter" type="button" class="px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-50 hover:bg-stone-100 text-xs sm:text-sm font-medium text-slate-700 disabled:opacity-40 transition" disabled>
           ← 이전 장
         </button>
-        <span id="chapterProgress" class="text-xs font-semibold text-slate-500 px-1.5">1 / 4</span>
+        <button id="verseMode" type="button" class="vr-button vr-primary" aria-haspopup="dialog">한 절씩 읽기</button>
+        <span id="chapterProgress" class="text-xs font-semibold text-slate-500 px-1.5">1 / 5</span>
         <button id="btnNextChapter" type="button" class="px-3 py-1.5 rounded-lg border border-stone-200 bg-stone-50 hover:bg-stone-100 text-xs sm:text-sm font-medium text-slate-700 disabled:opacity-40 transition">
           다음 장 →
         </button>
@@ -327,6 +649,56 @@
 
     <!-- Verses Container -->
     <div id="versesContainer" class="space-y-3"></div>
+    <dialog id="verseReader" aria-label="한 절씩 읽기" hidden>
+      <div class="vr-toolbar">
+        <div class="vr-head">
+          <button id="vrExit" type="button" class="vr-button">← 장별 보기</button>
+          <select id="vrChapter" class="vr-button" aria-label="읽을 장"></select>
+        </div>
+        <div class="vr-nav">
+          <button id="vrPrev" type="button" class="vr-button">↑ 이전 절</button>
+          <output id="vrPosition" aria-live="polite"></output>
+          <button id="vrNext" type="button" class="vr-button">다음 절 ↓</button>
+        </div>
+        <div class="vr-actions" aria-label="현재 구절 동작">
+          <button id="vrListen" type="button" class="vr-button">▶ 이 절 듣기</button>
+          <button id="vrLike" type="button" class="vr-button" aria-pressed="false">♡ 좋아요</button>
+          <button id="vrNote" type="button" class="vr-button">메모</button>
+          <button id="vrShare" type="button" class="vr-button">공유</button>
+          <button id="vrStudy" type="button" class="vr-button vr-primary">구절 공부</button>
+        </div>
+      </div>
+      <div id="vrFeed" class="vr-feed" tabindex="0" role="region" aria-label="위로 밀거나 아래 방향키를 눌러 다음 절 읽기"></div>
+      <p id="vrStatus" class="vr-status" role="status"></p>
+    </dialog>
+
+    <dialog id="vrDialog" class="vr-dialog" aria-labelledby="vrDialogTitle">
+      <div class="vr-dialog-body">
+        <form method="dialog" class="vr-dialog-close">
+          <button type="submit" class="vr-button" autofocus>닫기</button>
+        </form>
+        <h2 id="vrDialogTitle"></h2>
+        <p id="vrDialogRef" class="vr-ref"></p>
+        <form id="vrNoteForm" hidden>
+          <label for="vrNoteInput">이 기기에 저장할 메모</label>
+          <textarea id="vrNoteInput" rows="5" maxlength="4000"></textarea>
+          <button type="submit" class="vr-button vr-primary">메모 저장</button>
+        </form>
+        <div id="vrSharePanel" hidden>
+          <label for="vrShareText">공유할 구절</label>
+          <textarea id="vrShareText" rows="6" readonly></textarea>
+          <button id="vrCopyShare" type="button" class="vr-button vr-primary">본문 복사</button>
+        </div>
+        <div id="vrStudyPanel" hidden>
+          <div id="vrStudyNotes"></div>
+          <div class="vr-actions">
+            <a id="vrAskAi" target="_blank" rel="noopener noreferrer" class="vr-button vr-primary">ChatGPT에 질문</a>
+            <button id="vrCopyQuestion" type="button" class="vr-button">질문 복사</button>
+          </div>
+        </div>
+        <p id="vrDialogStatus" class="vr-status" role="status"></p>
+      </div>
+    </dialog>
   </main>
 
   <!-- Slim Bottom Sticky Mini-Player -->
@@ -357,10 +729,49 @@
   </div>
 
   <footer class="max-w-4xl w-full mx-auto px-4 py-6 text-center text-xs text-slate-400 border-t border-stone-200/70">
-    구약 (시편 1 · 37 · 91 · 128편) · 신약 (마태복음 6:9–13 주기도문 · 마태복음 5:1–12 팔복) — 개역한글(1961) &amp; KJV
+    구약 (시편 1 · 35 · 37 · 91 · 128편) · 신약 (마태복음 6:9–13 주기도문 · 마태복음 5:1–12 팔복) — 개역한글(1961) &amp; KJV
   </footer>
 
   <script>
+    // Source: Existing “시편 35편 · 한 절씩 한글과 영어” reader.
+// Korean: 개역한글 (대한성서공회, 1961). English: King James Version.
+const PSALM_35_CHAPTER = {
+  id: "psalm35",
+  title: "시편 35편",
+  subtitle: "Psalm 35 · 다윗의 시",
+  ref: "개역한글 · KJV (1–28절)",
+  verses: [
+    { v: 1, ko: "여호와여 나와 다투는 자와 다투시고 나와 싸우는 자와 싸우소서", en: "Plead my cause, O LORD, with them that strive with me: fight against them that fight against me." },
+    { v: 2, ko: "방패와 손 방패를 잡으시고 일어나 나를 도우소서", en: "Take hold of shield and buckler, and stand up for mine help." },
+    { v: 3, ko: "창을 빼사 나를 쫓는 자의 길을 막으시고 또 내 영혼에게 나는 네 구원이라 이르소서", en: "Draw out also the spear, and stop the way against them that persecute me: say unto my soul, I am thy salvation." },
+    { v: 4, ko: "내 생명을 찾는 자로 부끄러워 수치를 당케 하시며 나를 상해하려 하는 자로 물러가 낭패케 하소서", en: "Let them be confounded and put to shame that seek after my soul: let them be turned back and brought to confusion that devise my hurt." },
+    { v: 5, ko: "저희로 바람 앞에 겨와 같게 하시고 여호와의 사자로 몰아내소서", en: "Let them be as chaff before the wind: and let the angel of the LORD chase them." },
+    { v: 6, ko: "저희 길을 어둡고 미끄럽게 하시고 여호와의 사자로 저희를 따르게 하소서", en: "Let their way be dark and slippery: and let the angel of the LORD persecute them." },
+    { v: 7, ko: "저희가 무고히 나를 잡으려고 그 그물을 웅덩이에 숨기며 무고히 내 생명을 해하려고 함정을 팠사오니", en: "For without cause have they hid for me their net in a pit, which without cause they have digged for my soul." },
+    { v: 8, ko: "멸망으로 졸지에 저에게 임하게 하시며 그 숨긴 그물에 스스로 잡히게 하시며 멸망 중에 떨어지게 하소서", en: "Let destruction come upon him at unawares; and let his net that he hath hid catch himself: into that very destruction let him fall." },
+    { v: 9, ko: "내 영혼이 여호와를 즐거워함이여 그 구원을 기뻐하리로다", en: "And my soul shall be joyful in the LORD: it shall rejoice in his salvation." },
+    { v: 10, ko: "내 모든 뼈가 이르기를 여호와와 같은 자 누구리요 그는 가난한 자를 그보다 강한 자에게서 건지시고 가난하고 궁핍한 자를 노략하는 자에게서 건지시는 이라 하리로다", en: "All my bones shall say, LORD, who is like unto thee, which deliverest the poor from him that is too strong for him, yea, the poor and the needy from him that spoileth him?" },
+    { v: 11, ko: "불의한 증인이 일어나서 내가 알지 못하는 일로 내게 힐문하며", en: "False witnesses did rise up; they laid to my charge things that I knew not." },
+    { v: 12, ko: "내게 선을 악으로 갚아 나의 영혼을 외롭게 하나", en: "They rewarded me evil for good to the spoiling of my soul." },
+    { v: 13, ko: "나는 저희가 병 들었을 때에 굵은 베옷을 입으며 금식하여 내 영혼을 괴롭게 하였더니 내 기도가 내 품으로 돌아왔도다", en: "But as for me, when they were sick, my clothing was sackcloth: I humbled my soul with fasting; and my prayer returned into mine own bosom." },
+    { v: 14, ko: "내가 나의 친구와 형제에게 행함 같이 저희에게 행하였으며 내가 굽히고 슬퍼하기를 모친을 곡함 같이 하였도다", en: "I behaved myself as though he had been my friend or brother: I bowed down heavily, as one that mourneth for his mother." },
+    { v: 15, ko: "오직 내가 환난을 당하매 저희가 기뻐하여 서로 모임이여 비류가 나의 알지 못하는 중에 모여 나를 치며 찢기를 마지 아니하도다", en: "But in mine adversity they rejoiced, and gathered themselves together: yea, the abjects gathered themselves together against me, and I knew it not; they did tear me, and ceased not:" },
+    { v: 16, ko: "저희는 연회에서 망령되이 조롱하는 자 같이 나를 향하여 그 이를 갈도다", en: "With hypocritical mockers in feasts, they gnashed upon me with their teeth." },
+    { v: 17, ko: "주여 어느 때까지 관망하시리이까 내 영혼을 저 멸망자에게서 구원하시며 내 유일한 것을 사자들에게서 건지소서", en: "Lord, how long wilt thou look on? rescue my soul from their destructions, my darling from the lions." },
+    { v: 18, ko: "내가 대회 중에서 주께 감사하며 많은 백성 중에서 주를 찬송하리이다", en: "I will give thee thanks in the great congregation: I will praise thee among much people." },
+    { v: 19, ko: "무리하게 나의 원수된 자로 나를 인하여 기뻐하지 못하게 하시며 무고히 나를 미워하는 자로 눈짓하지 못하게 하소서", en: "Let not them that are mine enemies wrongfully rejoice over me: neither let them wink with the eye that hate me without a cause." },
+    { v: 20, ko: "대저 저희는 화평을 말하지 아니하고 평안히 땅에 거하는 자를 거짓말로 모해하며", en: "For they speak not peace: but they devise deceitful matters against them that are quiet in the land." },
+    { v: 21, ko: "또 저희가 나를 향하여 입을 크게 벌리고 하하 우리가 목도하였다 하나이다", en: "Yea, they opened their mouth wide against me, and said, Aha, aha, our eye hath seen it." },
+    { v: 22, ko: "여호와여 주께서 이를 보셨사오니 잠잠하지 마옵소서 주여 나를 멀리하지 마옵소서", en: "This thou hast seen, O LORD: keep not silence: O Lord, be not far from me." },
+    { v: 23, ko: "나의 하나님, 나의 주여 떨치고 깨셔서 나를 공판하시며 나의 송사를 다스리소서", en: "Stir up thyself, and awake to my judgment, even unto my cause, my God and my Lord." },
+    { v: 24, ko: "여호와 나의 하나님이여 주의 공의대로 나를 판단하사 저희로 나를 인하여 기뻐하지 못하게 하소서", en: "Judge me, O LORD my God, according to thy righteousness; and let them not rejoice over me." },
+    { v: 25, ko: "저희로 그 마음에 이르기를 아하 소원 성취하였다 하지 못하게 하시며 우리가 저를 삼켰다 하지 못하게 하소서", en: "Let them not say in their hearts, Ah, so would we have it: let them not say, We have swallowed him up." },
+    { v: 26, ko: "나의 해를 기뻐하는 자들로 부끄러워 낭패하게 하시며 나를 향하여 자긍하는 자로 수치와 욕을 당케 하소서", en: "Let them be ashamed and brought to confusion together that rejoice at mine hurt: let them be clothed with shame and dishonour that magnify themselves against me." },
+    { v: 27, ko: "나의 의를 즐거워하는 자로 기꺼이 부르고 즐겁게 하시며 그 종의 형통을 기뻐하시는 여호와는 광대하시다 하는 말을 저희로 항상 하게하소서", en: "Let them shout for joy, and be glad, that favour my righteous cause: yea, let them say continually, Let the LORD be magnified, which hath pleasure in the prosperity of his servant." },
+    { v: 28, ko: "나의 혀가 주의 의를 말하며 종일토록 주를 찬송하리이다", en: "And my tongue shall speak of thy righteousness and of thy praise all the day long." }
+  ]
+};
+
     const BIBLE_DATA = {
       old: [
         {
@@ -377,6 +788,7 @@
             { v: 6, ko: '대저 의인의 길은 여호와께서 인정하시나 악인의 길은 망하리로다', en: 'For the LORD knoweth the way of the righteous: but the way of the ungodly shall perish.' }
           ]
         },
+        PSALM_35_CHAPTER,
         {
           id: 'psalm37',
           title: '시편 37편',
@@ -460,7 +872,7 @@
             { v: 3, ko: '네 집 내실에 있는 네 아내는 결실한 포도나무 같으며 네 상에 둘린 자식은 어린 감람나무 같으리로다', en: 'Thy wife shall be as a fruitful vine by the sides of thine house: thy children like olive plants round about thy table.' },
             { v: 4, ko: '여호와를 경외하는 자는 이같이 복을 얻으리로다', en: 'Behold, that thus shall the man be blessed that feareth the LORD.' },
             { v: 5, ko: '여호와께서 시온에서 네게 복을 주실지어다 너는 평생에 예루살렘의 복을 보며', en: 'The LORD shall bless thee out of Zion: and thou shalt see the good of Jerusalem all the days of thy life.' },
-            { v: 6, ko: '네 자식의 자식을 볼지어다 이스라엘에게 평강이 있을지로다', en: 'Yea, thou shalt see thy children's children, and peace upon Israel.' }
+            { v: 6, ko: '네 자식의 자식을 볼지어다 이스라엘에게 평강이 있을지로다', en: 'Yea, thou shalt see thy children\'s children, and peace upon Israel.' }
           ]
         }
       ],
@@ -468,7 +880,7 @@
         {
           id: 'matthew6_lords_prayer',
           title: '마태복음 6:9–13 (주기도문)',
-          subtitle: 'The Lord's Prayer · Matthew 6:9–13',
+          subtitle: 'The Lord\'s Prayer · Matthew 6:9–13',
           ref: '전통 기도문 · KJV (9–13절)',
           verses: [
             { v: 9, ko: '하늘에 계신 우리 아버지여, 이름이 거룩히 여김을 받으시오며,', en: 'Our Father which art in heaven, Hallowed be thy name.' },
@@ -493,7 +905,7 @@
             { v: 7, ko: '긍휼히 여기는 자는 복이 있나니 저희가 긍휼히 여김을 받을 것임이요', en: 'Blessed are the merciful: for they shall obtain mercy.' },
             { v: 8, ko: '마음이 청결한 자는 복이 있나니 저희가 하나님을 볼 것임이요', en: 'Blessed are the pure in heart: for they shall see God.' },
             { v: 9, ko: '화평케 하는 자는 복이 있나니 저희가 하나님의 아들이라 일컬음을 받을 것임이요', en: 'Blessed are the peacemakers: for they shall be called the children of God.' },
-            { v: 10, ko: '의를 위하여 핍박을 받은 자는 복이 있나니 천국이 저희 것임이라', en: 'Blessed are they which are persecuted for righteousness' sake: for theirs is the kingdom of heaven.' },
+            { v: 10, ko: '의를 위하여 핍박을 받은 자는 복이 있나니 천국이 저희 것임이라', en: 'Blessed are they which are persecuted for righteousness\' sake: for theirs is the kingdom of heaven.' },
             { v: 11, ko: '나를 인하여 너희를 욕하고 핍박하고 거짓으로 너희를 거스려 모든 악한 말을 할 때에는 너희에게 복이 있나니', en: 'Blessed are ye, when men shall revile you, and persecute you, and shall say all manner of evil against you falsely, for my sake.' },
             { v: 12, ko: '기뻐하고 즐거워하라 하늘에서 너희의 상이 큼이라 너희 전에 있던 선지자들을 이같이 핍박하였느니라', en: 'Rejoice, and be exceeding glad: for great is your reward in heaven: for so persecuted they the prophets which were before you.' }
           ]
@@ -721,6 +1133,10 @@
     }
 
     function scrollToActiveVerse() {
+      if (vr.verseReader.open) {
+        positionReader();
+        return;
+      }
       const card = document.getElementById(`verse-card-${state.activeVerseIdx}`);
       if (card) {
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -728,6 +1144,7 @@
     }
 
     function updatePlayControls() {
+      updateReaderControls();
       if (state.isPlaying && !state.isPaused) {
         els.playIcon.textContent = '⏸';
         els.playLabel.textContent = '일시정지';
@@ -967,7 +1384,7 @@
         };
 
         utter.onerror = () => {
-          if (settled) return;
+          if (settled || session !== playSessionId) return;
           settled = true;
           els.ttsWarning.classList.remove('hidden');
           els.ttsWarning.textContent = '음성 재생이 차단되었을 수 있습니다. [🔊 소리 복구] 또는 [⬇ 저장] 후 브라우저에서 열어주세요.';
@@ -1005,6 +1422,12 @@
 
       if (langPos < seq.length - 1) {
         speakSentence(verseIdx, seq[langPos + 1], session);
+        return;
+      }
+
+      if (vr.verseReader.open) {
+        stopPlayback();
+        vr.vrStatus.textContent = '이 절 낭독을 마쳤습니다.';
         return;
       }
 
@@ -1058,6 +1481,7 @@
       renderTabs();
       renderChapterHeader();
       renderVerses();
+      renderVerseReader();
       updatePlayControls();
     }
 
@@ -1207,7 +1631,15 @@
 
     els.btnDownloadHtml.addEventListener('click', () => {
       try {
-        const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        const exportRoot = document.documentElement.cloneNode(true);
+        exportRoot.querySelector('#verseReader').removeAttribute('open');
+        exportRoot.querySelector('#verseReader').hidden = true;
+        exportRoot.querySelector('#vrChapter').replaceChildren();
+        exportRoot.querySelector('#vrFeed').replaceChildren();
+        exportRoot.querySelector('#vrStatus').textContent = '';
+        exportRoot.querySelector('#vrDialog').removeAttribute('open');
+        exportRoot.querySelector('#vrStudyNotes').replaceChildren();
+        const htmlContent = '<!DOCTYPE html>\n' + exportRoot.outerHTML;
         const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1354,8 +1786,355 @@
       applyDesign(true);
     });
 
+    // Hebrew text checked against the Berean Interlinear Bible, Psalms 35 and 91.
+// Context checked against USCCB Bible notes for Psalms 35 and 91.
+const VERSE_STUDY = {
+  "psalm35:1": {
+    meaning: "시인은 자신을 대적하는 사람들 앞에서 하나님이 자기 편에 서서 변호하고 도와주시기를 청합니다.",
+    context: "시편 35편은 부당한 공격과 배신을 겪는 사람의 탄식입니다. 첫 두 문장은 재판에서 다투는 모습과 전투에서 싸우는 모습을 나란히 그립니다.",
+    original: "רִיבָה (리바) · 맞서 다투다, 송사를 변호하다. לְחַם (레함) · 싸우다."
+  },
+  "psalm35:3": {
+    meaning: "시인은 뒤쫓는 사람들로부터 구해 달라고 간구하며, 하나님이 자신의 구원이심을 직접 확인받기 원합니다.",
+    context: "2절의 방패에 이어 3절에는 창이 등장합니다. 전투 장비의 이미지 뒤에 하나님이 시인에게 직접 말씀해 주시기를 바라는 기도가 이어집니다.",
+    original: "יְשֻׁעָתֵךְ (예슈아테크) · 너의 구원. 기본형 יְשׁוּעָה (예슈아)는 구원이나 구출을 뜻합니다."
+  },
+  "psalm35:11": {
+    meaning: "악의를 품은 증인들이 시인이 알지도 못하는 일로 그를 추궁합니다.",
+    context: "12절에서는 사람들이 선을 악으로 갚았다고 말합니다. 13–14절에서 시인은 그들이 아플 때 자신이 금식하고 슬퍼했던 일을 떠올립니다.",
+    original: "עֵדֵי חָמָס (에데 하마스) · 문자 그대로는 폭력이나 부정의의 증인들. 이 문맥에서는 악의를 품고 고발하는 증인들을 가리킵니다."
+  },
+  "psalm35:28": {
+    meaning: "시인은 하나님의 공의를 말하며 온종일 찬양하겠다고 다짐합니다.",
+    context: "앞 절에서 시인은 자신이 공정한 판결을 받기를 바라는 사람들이 함께 기뻐하기를 청합니다. 탄식으로 열린 시는 공동체의 기쁨과 시인 자신의 찬양으로 마칩니다.",
+    original: "צִדְקֶךָ (치드케카) · 주의 공의, 주의 의. תְּהִלָּתֶךָ (테힐라테카) · 주께 드리는 찬양."
+  },
+  "psalm91:1": {
+    meaning: "지존하신 하나님께 피하는 사람은 그분의 보호 아래 거한다고 말합니다.",
+    context: "시편 91편은 하나님을 피난처로 삼는 신뢰의 시입니다. 은신처와 그늘이라는 이미지는 4절의 날개 아래 피하는 모습과 연결됩니다.",
+    original: "עֶלְיוֹן (엘리온) · 가장 높으신 분. שַׁדַּי (샤다이) · 하나님을 가리키는 칭호로 흔히 ‘전능자’로 옮깁니다."
+  },
+  "psalm91:2": {
+    meaning: "시인은 하나님을 자신의 피난처와 요새라고 부르며 그분을 의지한다고 고백합니다.",
+    context: "1절의 보호가 2절에서는 ‘나의’라는 말로 개인의 신앙 고백이 됩니다. 3절부터는 그 보호를 여러 위험의 이미지로 풀어냅니다.",
+    original: "מַחְסִי (마흐시) · 나의 피난처. מְצוּדָתִי (메추다티) · 나의 요새."
+  },
+  "psalm91:4": {
+    meaning: "하나님의 보호를 새가 날개 아래 품는 모습으로, 하나님의 신실하심을 위험을 막아 주는 방패로 그립니다.",
+    context: "앞 절의 덫과 전염병에 이어, 4절은 보호 자체에 시선을 돌립니다. 부드러운 날개와 견고한 방패가 한 절에 함께 나옵니다.",
+    original: "כְּנָפָיו (케나파브) · 그의 날개. אֲמִתּוֹ (아미토) · 그의 진실함, 문맥상 그의 신실하심."
+  },
+  "psalm91:11": {
+    meaning: "하나님이 천사들에게 명하여 믿는 이의 길을 지키게 하신다는 말씀입니다.",
+    context: "12절은 발이 돌에 부딪히지 않도록 받들어 주는 모습으로 이어집니다. 시편의 이 두 절은 마태복음 4장 6절과 누가복음 4장 10–11절의 광야 시험 장면에 인용됩니다.",
+    original: "מַלְאָכָיו (말아카브) · 그의 천사들. 단수 מַלְאָךְ (말아크)는 사자, 곧 보냄을 받은 이를 뜻합니다."
+  },
+  "psalm91:15": {
+    meaning: "하나님은 자신을 부르는 이에게 응답하시고, 환난 가운데 함께하시며 건져 주겠다고 말씀하십니다.",
+    context: "14–16절에서는 하나님이 직접 말씀하시는 형식으로 바뀝니다. 15절은 건져 주시겠다는 약속과 환난 속에서도 함께하신다는 약속을 담습니다.",
+    original: "עִמּוֹ אָנֹכִי בְצָרָה (임모 아노키 베차라) · 환난 가운데 내가 그와 함께한다."
+  }
+};
+
+    const vr = Object.fromEntries([
+      'verseReader', 'verseMode', 'vrExit', 'vrChapter', 'vrFeed', 'vrPosition',
+      'vrPrev', 'vrNext', 'vrListen', 'vrLike', 'vrNote', 'vrShare', 'vrStudy',
+      'vrStatus', 'vrDialog', 'vrDialogTitle', 'vrDialogRef', 'vrDialogStatus',
+      'vrNoteForm', 'vrNoteInput', 'vrSharePanel', 'vrShareText', 'vrCopyShare',
+      'vrStudyPanel', 'vrStudyNotes', 'vrAskAi', 'vrCopyQuestion'
+    ].map(id => [id, document.getElementById(id)]));
+    const verseStorageKey = 'bible_reader_verse_marks_v1';
+    let verseMarks = {};
+    let readerScrollFrame = 0;
+    let dialogVerseKey = '';
+    let studyQuestion = '';
+
+    function loadVerseMarks() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(verseStorageKey) || '{}');
+        if (saved && typeof saved === 'object' && !Array.isArray(saved)) verseMarks = saved;
+      } catch (_) {}
+    }
+
+    function saveVerseMark(key, update) {
+      loadVerseMarks();
+      const next = { ...verseMarks, [key]: { ...verseMarks[key], ...update } };
+      if (!next[key].liked && !next[key].note) delete next[key];
+      try {
+        localStorage.setItem(verseStorageKey, JSON.stringify(next));
+        verseMarks = next;
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function verseReference(chapter, verse) {
+      if (chapter.id === 'matthew6_lords_prayer') return '마태복음 6:' + verse.v;
+      if (chapter.id === 'matthew5_beatitudes') return '마태복음 5:' + verse.v;
+      return chapter.title + ' ' + verse.v + '절';
+    }
+
+    function currentReaderVerse() {
+      const chapter = getCurrentChapter();
+      const verse = chapter.verses[state.activeVerseIdx];
+      return { chapter, verse, key: chapter.id + ':' + verse.v, reference: verseReference(chapter, verse) };
+    }
+
+    function updateReaderControls() {
+      if (!vr.verseReader.open) return;
+      const { chapter, verse, key } = currentReaderVerse();
+      const mark = verseMarks[key] || {};
+      vr.vrPosition.textContent = verse.v + '절 · ' + (state.activeVerseIdx + 1) + ' / ' + chapter.verses.length;
+      vr.vrPrev.disabled = state.activeVerseIdx === 0;
+      vr.vrNext.disabled = state.activeVerseIdx === chapter.verses.length - 1;
+      vr.vrListen.textContent = state.isPlaying && !state.isPaused ? '■ 낭독 정지' : '▶ 이 절 듣기';
+      vr.vrLike.setAttribute('aria-pressed', String(Boolean(mark.liked)));
+      vr.vrLike.textContent = mark.liked ? '♥ 좋아요' : '♡ 좋아요';
+      vr.vrNote.textContent = mark.note ? '메모 편집' : '메모';
+      vr.vrFeed.querySelector('.vr-active')?.classList.remove('vr-active');
+      vr.vrFeed.children[state.activeVerseIdx]?.classList.add('vr-active');
+    }
+
+    function feedOffset(slide) {
+      return slide.offsetTop - vr.vrFeed.firstElementChild.offsetTop;
+    }
+
+    function positionReader() {
+      if (!vr.verseReader.open) return;
+      const slide = vr.vrFeed.children[state.activeVerseIdx];
+      if (slide) vr.vrFeed.scrollTop = feedOffset(slide);
+      updateReaderControls();
+    }
+
+    function renderVerseReader() {
+      if (!vr.verseReader.open) return;
+      const chapter = getCurrentChapter();
+      vr.vrChapter.value = chapter.id;
+      vr.verseReader.dataset.fontSize = design.fontSize;
+      const slides = chapter.verses.map(verse => {
+        const slide = document.createElement('div');
+        slide.className = 'vr-slide';
+        const card = document.createElement('article');
+        card.className = 'vr-card';
+        const reference = document.createElement('h2');
+        reference.className = 'vr-ref';
+        reference.textContent = verseReference(chapter, verse);
+        card.append(reference);
+        for (const lang of getLangSequence()) {
+          const paragraph = document.createElement('p');
+          paragraph.className = 'vr-' + lang;
+          paragraph.lang = lang;
+          paragraph.textContent = verse[lang];
+          card.append(paragraph);
+        }
+        slide.append(card);
+        return slide;
+      });
+      vr.vrFeed.replaceChildren(...slides);
+      vr.vrStatus.textContent = '';
+      positionReader();
+    }
+
+    function openVerseReader() {
+      loadVerseMarks();
+      vr.verseReader.hidden = false;
+      vr.verseReader.showModal();
+      renderVerseReader();
+      vr.vrFeed.focus({ preventScroll: true });
+    }
+
+    function selectReaderChapter(id, verseNumber) {
+      for (const [testament, chapters] of Object.entries(BIBLE_DATA)) {
+        const chapterIdx = chapters.findIndex(chapter => chapter.id === id);
+        if (chapterIdx < 0) continue;
+        const verseIdx = verseNumber === undefined ? 0 : chapters[chapterIdx].verses.findIndex(verse => verse.v === verseNumber);
+        if (verseIdx < 0) return false;
+        stopPlayback();
+        Object.assign(state, { testament, chapterIdx, activeVerseIdx: verseIdx });
+        renderAll();
+        return true;
+      }
+      return false;
+    }
+
+    function selectReaderVerse(index, reposition = true) {
+      const last = getCurrentChapter().verses.length - 1;
+      const target = Math.min(last, Math.max(0, index));
+      if (target !== state.activeVerseIdx) {
+        stopPlayback();
+        state.activeVerseIdx = target;
+        vr.vrStatus.textContent = '';
+      }
+      if (reposition) positionReader();
+      else updateReaderControls();
+    }
+
+    function openReaderDialog(title, panel, reference) {
+      vr.vrDialogTitle.textContent = title;
+      vr.vrDialogRef.textContent = reference;
+      vr.vrDialogStatus.textContent = '';
+      for (const element of [vr.vrNoteForm, vr.vrSharePanel, vr.vrStudyPanel]) element.hidden = element !== panel;
+      vr.vrDialog.showModal();
+    }
+
+    function readerShareText(chapter, verse, reference) {
+      const lines = [reference, ...getLangSequence().map(lang => verse[lang])];
+      const url = new URL(location.href);
+      if (url.protocol === 'https:' || url.protocol === 'http:') {
+        url.search = '';
+        url.hash = '';
+        url.searchParams.set('verse', chapter.id + ':' + verse.v);
+        lines.push(url.href);
+      }
+      return lines.join('\n\n');
+    }
+
+    async function copyReaderText(value, status, fallback) {
+      try {
+        await navigator.clipboard.writeText(value);
+        status.textContent = '복사했습니다.';
+      } catch (_) {
+        if (fallback) {
+          fallback.focus();
+          fallback.select();
+          status.textContent = '선택한 내용을 직접 복사해 주세요.';
+        } else {
+          status.textContent = '복사를 사용할 수 없습니다. ChatGPT에 질문 버튼으로 열어 주세요.';
+        }
+      }
+    }
+
+    function addStudySection(title, content) {
+      const heading = document.createElement('h3');
+      heading.textContent = title;
+      const paragraph = document.createElement('p');
+      paragraph.textContent = content;
+      vr.vrStudyNotes.append(heading, paragraph);
+    }
+
+    for (const chapters of Object.values(BIBLE_DATA)) {
+      for (const chapter of chapters) vr.vrChapter.add(new Option(chapter.title, chapter.id));
+    }
+
+    vr.verseMode.addEventListener('click', openVerseReader);
+    vr.vrExit.addEventListener('click', () => vr.verseReader.close());
+    vr.verseReader.addEventListener('close', () => {
+      vr.verseReader.hidden = true;
+      stopPlayback();
+      vr.verseMode.focus({ preventScroll: true });
+      scrollToActiveVerse();
+    });
+    vr.vrChapter.addEventListener('change', () => selectReaderChapter(vr.vrChapter.value));
+    vr.vrPrev.addEventListener('click', () => selectReaderVerse(state.activeVerseIdx - 1));
+    vr.vrNext.addEventListener('click', () => selectReaderVerse(state.activeVerseIdx + 1));
+    vr.vrFeed.addEventListener('keydown', event => {
+      if (['ArrowUp', 'PageUp', 'ArrowDown', 'PageDown'].includes(event.key)) {
+        event.preventDefault();
+        selectReaderVerse(state.activeVerseIdx + (['ArrowUp', 'PageUp'].includes(event.key) ? -1 : 1));
+      }
+    });
+    vr.vrFeed.addEventListener('scroll', () => {
+      cancelAnimationFrame(readerScrollFrame);
+      readerScrollFrame = requestAnimationFrame(() => {
+        if (!vr.verseReader.open) return;
+        const midpoint = vr.vrFeed.scrollTop + vr.vrFeed.clientHeight / 2;
+        const slides = Array.from(vr.vrFeed.children);
+        const visible = slides.findIndex(slide => feedOffset(slide) + slide.offsetHeight > midpoint);
+        if (visible >= 0 && visible !== state.activeVerseIdx) selectReaderVerse(visible, false);
+      });
+    }, { passive: true });
+    vr.vrListen.addEventListener('click', () => {
+      if (state.isPlaying && !state.isPaused) stopPlayback();
+      else startPlayback(state.activeVerseIdx);
+    });
+    vr.vrLike.addEventListener('click', () => {
+      const { key } = currentReaderVerse();
+      loadVerseMarks();
+      const liked = !verseMarks[key]?.liked;
+      const saved = saveVerseMark(key, { liked });
+      updateReaderControls();
+      vr.vrStatus.textContent = saved ? (liked ? '좋아요를 저장했습니다.' : '좋아요를 취소했습니다.') : '이 브라우저에서는 좋아요를 저장할 수 없습니다.';
+    });
+    vr.vrNote.addEventListener('click', () => {
+      const { key, reference } = currentReaderVerse();
+      dialogVerseKey = key;
+      loadVerseMarks();
+      vr.vrNoteInput.value = verseMarks[key]?.note || '';
+      openReaderDialog('구절 메모', vr.vrNoteForm, reference);
+      vr.vrNoteInput.focus();
+    });
+    vr.vrNoteForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const note = vr.vrNoteInput.value.trim();
+      if (saveVerseMark(dialogVerseKey, { note })) {
+        vr.vrDialog.close();
+        updateReaderControls();
+        vr.vrStatus.textContent = note ? '메모를 저장했습니다.' : '메모를 지웠습니다.';
+      } else {
+        vr.vrDialogStatus.textContent = '이 브라우저에서는 메모를 저장할 수 없습니다.';
+      }
+    });
+    vr.vrShare.addEventListener('click', async () => {
+      const { chapter, verse, reference } = currentReaderVerse();
+      const text = readerShareText(chapter, verse, reference);
+      if (typeof navigator.share === 'function') {
+        try {
+          await navigator.share({ title: reference, text });
+          return;
+        } catch (error) {
+          if (error.name === 'AbortError') return;
+        }
+      }
+      vr.vrShareText.value = text;
+      openReaderDialog('구절 공유', vr.vrSharePanel, reference);
+    });
+    vr.vrCopyShare.addEventListener('click', () => copyReaderText(vr.vrShareText.value, vr.vrDialogStatus, vr.vrShareText));
+    vr.vrStudy.addEventListener('click', () => {
+      const { chapter, reference, key } = currentReaderVerse();
+      const note = VERSE_STUDY[key];
+      const isPsalm = chapter.id.startsWith('psalm');
+      vr.vrStudyNotes.replaceChildren();
+      if (note) {
+        addStudySection('뜻', note.meaning);
+        addStudySection('문맥', note.context);
+        addStudySection('히브리어', note.original);
+        const source = document.createElement('a');
+        source.href = 'https://biblehub.com/interlinear/psalms/' + chapter.id.slice(5) + '.htm';
+        source.target = '_blank';
+        source.rel = 'noopener noreferrer';
+        source.textContent = '히브리어 원문 대조';
+        vr.vrStudyNotes.append(source);
+      } else {
+        const paragraph = document.createElement('p');
+        paragraph.textContent = 'ChatGPT에 이 구절의 뜻과 배경, ' + (isPsalm ? '히브리어' : '그리스어') + ' 핵심 단어를 질문할 수 있습니다.';
+        vr.vrStudyNotes.append(paragraph);
+      }
+      studyQuestion = reference + '의 뜻과 앞뒤 문맥을 쉬운 한국어로 설명해 주세요. ' +
+        (isPsalm ? '히브리어' : '그리스어') + ' 핵심 단어 1~2개의 원문 표기, 읽는 법, 이 구절에서의 뜻을 알려 주세요. 가능한 해석이 여럿이면 구분하고, 확인할 수 있는 출처도 밝혀 주세요.';
+      const aiUrl = new URL('https://chatgpt.com/');
+      aiUrl.searchParams.set('q', studyQuestion);
+      vr.vrAskAi.href = aiUrl.href;
+      openReaderDialog('구절 공부', vr.vrStudyPanel, reference);
+    });
+    vr.vrCopyQuestion.addEventListener('click', () => copyReaderText(studyQuestion, vr.vrDialogStatus));
+    window.addEventListener('storage', event => {
+      if (event.key === verseStorageKey || event.key === null) {
+        verseMarks = {};
+        loadVerseMarks();
+        updateReaderControls();
+      }
+    });
+
+    function openSharedVerse() {
+      const key = new URLSearchParams(location.search).get('verse') || '';
+      const match = /^([a-z0-9_]+):(\d+)$/.exec(key);
+      if (match && selectReaderChapter(match[1], Number(match[2]))) openVerseReader();
+    }
+
     applyDesign(false);
     renderAll();
+    openSharedVerse();
   </script>
 </body>
 </html>
